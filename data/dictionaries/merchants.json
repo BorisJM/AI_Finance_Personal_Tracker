@@ -1,0 +1,252 @@
+{
+  "BIEDRONKA": {
+    "aliases": [
+      "BIEDRONKA",
+      "JERONIMO"
+    ],
+    "category": "Groceries"
+  },
+
+  "UBER": {
+    "aliases": [
+      "UBER",
+      "UBER TRIP",
+      "UBER RIDES"
+    ],
+    "category": "Transport"
+  },
+  "BOLT": {
+    "aliases": [
+      "BOLT"
+    ],
+    "category": "Transport"
+  },
+  "ZABKA": {
+    "aliases": [
+      "ZABKA"
+    ],
+    "category": "Groceries"
+  },
+  "ROSSMANN": {
+    "aliases": [
+      "ROSSMANN"
+    ],
+    "category": "Hygiene"
+  },
+  "ALLEGRO": {
+    "aliases": [
+      "ALLEGRO"
+    ],
+    "category": "Shopping"
+  },
+  "SNIPES": {
+    "aliases": [
+      "SNIPES"
+    ],
+    "category": "Clothes"
+  },
+  "LIDL": {
+    "aliases": [
+      "LIDL"
+    ],
+    "category": "Groceries"
+  },
+  "WELLFITNESS": {
+    "aliases": [
+      "WF",
+      "WELLFITNESS"
+    ],
+    "category": "Health & Fitness"
+  },
+  "KFD SP. Z O.O.": {
+    "aliases": [
+      "KFD"
+    ],
+    "category": "Health & Fitness"
+  },
+  "CIRCLE K": {
+    "aliases": [
+      "CIRCLE K",
+      "CIRCLE"
+    ],
+    "category": "Car"
+  },
+  "YOUTUBE MUSIC": {
+    "aliases": [
+      "YOUTUBE",
+      "YOUTUBEPREMIUM",
+      "YOUTUBE MUSIC"
+    ],
+    "category": "Subscriptions"
+  },
+  "JAKDOJADE.PL": {
+    "aliases": [
+      "JAKDOJADE",
+      "ZDMIKP"
+    ],
+    "category": "Transport"
+  },
+  "BERLIN DONER KEBAB": {
+    "aliases": [
+      "BERLIN DONER",
+      "BERLIN DONER KEBAP"
+    ],
+    "category": "Food"
+  },
+  "PASIBUS": {
+    "aliases": [
+      "PASIBUS"
+    ],
+    "category": "Food"
+  },
+  "PARMA": {
+    "aliases": [
+      "PARMA"
+    ],
+    "category": "Food"
+  },
+  "LOS CHUPITOS": {
+    "aliases": [
+      "CHUPITO",
+      "LOS CHUPITO",
+      "LOS CHUPITOS"
+    ],
+    "category": "Alcohol"
+    },
+    "PIJALNIA WODKI I PIWA": {
+    "aliases": [
+      "PIJALNIA WODKI I PIWA",
+      "PIJALNIA"
+    ],
+    "category": "Alcohol"
+  },
+  "LUMI SHOT BAR": {
+    "aliases": [
+      "LUMI"
+    ],
+    "category": "Alcohol"
+  },
+  "University": {
+    "aliases": [
+      "INFORMATYKA STOSOWANA",
+      "STUDIA",
+      "CZESNE"
+    ],
+    "category": "Education"
+  },
+  "CUKIERNIA STAROPOLSKA": {
+    "aliases": [
+      "STAROPOLSKA"
+    ],
+    "category": "Food"
+  },
+  "PARKING": {
+    "aliases": [
+      "PARKING"
+    ],
+    "category": "Car"
+  },
+  "PREZENT": {
+    "aliases": [
+      "PREZENT",
+      "GIFT"
+    ],
+    "category": "Other"
+  },
+  "SPORTANO": {
+    "aliases": [
+      "SPORTANO"
+    ],
+    "category": "Shopping"
+  },
+  "WYNAGRODZENIE": {
+    "aliases": [
+      "WYNAGRODZENIE"
+    ],
+    "category": "Income"
+  },
+  "WIZZAIR": {
+    "aliases": [
+      "WIZZAIR"
+    ],
+    "category": "Travel"
+  },
+  "ALBA VII": {
+    "aliases": [
+      "ALBA"
+    ],
+    "category": "Health & Fitness"
+  },
+  "OPENAI": {
+    "aliases": [
+      "OPENAI",
+      "CHATGPT"
+    ],
+    "category": "Subscriptions"
+  },
+  "OBSLUGA KARTY OPLATA": {
+    "aliases": [
+      "OPŁATA MIESIĘCZNA",
+      "KARTY"
+    ],
+    "category": "Subscriptions"
+  },
+  "UBEZPIECZENIE": {
+    "aliases": [
+      "GOLDPLATINUM",
+      "UBEZPIECZENIE"
+    ],
+    "category": "Insurance"
+  },
+  "MYJ-CAR": {
+    "aliases": [
+      "SLAWOMIR MISZKOWIAK"
+    ],
+    "category": "Car"
+  },
+  "BOXING": {
+    "aliases": [
+      "BORIS MATENCO",
+      "PESEL"
+    ],
+    "category": "Health & Fitness"
+  },
+  "INTERCITY": {
+    "aliases": [
+      "INTERCITY",
+      "BILETINTERCITY",
+      "WWWBILETINTERCITYPL"
+    ],
+    "category": "Travel"
+  },
+  "GLOVO": {
+    "aliases": [
+      "GLOVO",
+      "GLOVO APR"
+    ],
+    "category": "Food"
+  },
+  "GP KART": {
+    "aliases": [
+      "GP KART",
+      "GO KART"
+    ],
+    "category": "Entertainment"
+  },
+  "PRZELEW BLIK": {
+    "aliases": [
+      "BLIK",
+      "PRZELEW BLIK"
+    ],
+    "category": "Other"
+  },
+  "REGULARNE OSZCZEDZANIE": {
+    "aliases": [
+      "OSZCZĘDZANIE",
+      "OSZCZEDZANIE",
+      "REGULARNE OSZCZĘDZANIE",
+      "REGULARNE OSZCZEDZANIE"
+    ],
+    "category": "Financial"
+  }
+}

@@ -16,5 +16,5 @@ def data_cleaning(df):
     data_conversion(df)
     # Cleaning description, regex cleaning, remove numbers, symbols, non-word characters
     df["transaction_description"] = df["transaction_description"].apply(clean_transactions)
-
+    return df
 
