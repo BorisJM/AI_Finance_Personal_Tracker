@@ -6,7 +6,20 @@
     ],
     "category": "Groceries"
   },
-
+  "BOOKING": {
+    "aliases": [
+      "BOOKING",
+      "BOOKING BV"
+    ],
+    "category": "Travel"
+  },
+  "BARBER": {
+    "aliases": [
+      "BARBER",
+      "SOBIESKIEGO"
+    ],
+    "category": "Personal Care"
+  },
   "UBER": {
     "aliases": [
       "UBER",
@@ -146,13 +159,6 @@
     ],
     "category": "Car"
   },
-  "PREZENT": {
-    "aliases": [
-      "PREZENT",
-      "GIFT"
-    ],
-    "category": "Other"
-  },
   "SPORTANO": {
     "aliases": [
       "SPORTANO"
@@ -215,7 +221,8 @@
     "aliases": [
       "INTERCITY",
       "BILETINTERCITY",
-      "WWWBILETINTERCITYPL"
+      "WWWBILETINTERCITYPL",
+      "EIC_"
     ],
     "category": "Travel"
   },
@@ -238,7 +245,7 @@
       "BLIK",
       "PRZELEW BLIK"
     ],
-    "category": "Other"
+    "category": "Transfers"
   },
   "REGULARNE OSZCZEDZANIE": {
     "aliases": [
@@ -248,5 +255,108 @@
       "REGULARNE OSZCZEDZANIE"
     ],
     "category": "Financial"
+  },
+  "UDEMY": {
+    "aliases": [
+      "UDEMY"
+    ],
+    "category": "Education"
+  },
+  "CUKIERNIA SOWA": {
+    "aliases": [
+      "CUKIERNIA SOWA",
+      "SOWA"
+    ],
+    "category": "Food"
+  },
+  "ALIGATOR ZOO": {
+    "aliases": [
+      "ZOO",
+      "ALIGATOR ZOO"
+    ],
+    "category": "Pet"
+  },
+  "OLIMP STORE": {
+    "aliases": [
+      "OLIMP",
+      "OLIMP STORE"
+    ],
+    "category": "Health & Fitness"
+  },
+  "GT FARM KATOWICE": {
+    "aliases": [
+      "GT FARM",
+      "GT FARM KATOWICE"
+    ],
+    "category": "Food"
+  },
+  "PREZERO ARENA GLIWICE": {
+    "aliases": [
+      "PREZERO",
+      "ARENA GLIWICE",
+      "PREZERO ARENA GLIWICE"
+    ],
+    "category": "Entertainment"
+  },
+  "PLAY": {
+    "aliases": [
+      "PLAY",
+      "P SP Z OO",
+      "P SP Z OO WARSZAWA POL"
+    ],
+    "category": "Bills & Utilities"
+  },
+  "GIFT": {
+    "aliases": [
+      "GIFT",
+      "PREZENT"
+    ],
+    "category": "Gifts"
+  },
+  "SUPREMUM": {
+    "aliases": [
+      "SUPREMUM",
+      "PATRYK MACKOW"
+    ],
+    "category": "Alcohol"
+  },
+  "PRZELEW WLASNY": {
+    "aliases": [
+      "PRZELEW WLASNY",
+      "PRZELEW WŁASNY"
+    ],
+    "category": "Gifts"
+  },
+  "PRECLE": {
+    "aliases": [
+      "PRECLE",
+      "DOBRE PRECLE"
+    ],
+    "category": "Food"
+  },
+  "GORACO POLECAM": {
+    "aliases": [
+      "GORACO POLECAM",
+      "GORACO POLECAM BYDGOSZCZ"
+    ],
+    "category": "Food"
+  },
+  "SPLATA KARTY": {
+    "aliases": [
+      "SPLATA KARTY",
+      "NAN",
+      "KARTA",
+      "CREDIT CARD"
+    ],
+    "category": "Transfers"
+  },
+  "ERGO HESTIA": {
+    "aliases": [
+      "ERGO",
+      "ERGO HESTIA",
+      "INSURANCE",
+      "UBEZPIECZENIE"
+    ],
+    "category": "Car"
   }
 }

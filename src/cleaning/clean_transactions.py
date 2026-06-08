@@ -21,5 +21,4 @@ def clean_transactions(text):
     text = re.sub(r"[^\w\s]", "", text)
     # 4. Delete multiple spaces
     text = re.sub(r"\s+", " ", text).strip()
-    print(text)
     return text

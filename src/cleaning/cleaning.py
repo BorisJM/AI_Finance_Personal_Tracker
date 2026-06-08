@@ -16,5 +16,7 @@ def data_cleaning(df):
     data_conversion(df)
     # Cleaning description, regex cleaning, remove numbers, symbols, non-word characters
     df["transaction_description"] = df["transaction_description"].apply(clean_transactions)
+    # For empty fields we will put name of receiver/sender
+    df.loc[df["transaction_description"] == "", "transaction_description"] = df["counterparty_name"]
     return df
 
