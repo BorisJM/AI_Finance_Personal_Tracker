@@ -1,11 +1,11 @@
 # Function to calculate total expenses
 def calculate_total_expenses(df):
     total_expenses = df["debit_amount"].sum()
-    print("Total expenses:", round(total_expenses, 2))
+    return total_expenses
 
 # Function to calculate total expenses per month
 def calculate_monthly_expenses(df):
-    total_expenses_per_month = df.groupby("transaction_month")["debit_amount"].sum()
+    total_expenses_per_month = df.groupby("transaction_month")["debit_amount"].sum().reset_index()
     print(total_expenses_per_month)
     return total_expenses_per_month
 

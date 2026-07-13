@@ -6,3 +6,4 @@ def classification(df):
     # Set Income category for every transaction with positive credit amount
     df.loc[df["credit_amount"] > 0, 'transaction_category'] = "Income"
     print(df[df["transaction_category"] == "Other"][["transaction_description", "debit_amount"]])
+    return df

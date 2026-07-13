@@ -7,14 +7,11 @@ from src.analytics.spending_analysis import calculate_total_expenses, calculate_
     calculate_biggest_expenses, calculate_average_monthly_expense, top_transactions
 from src.classification.transcation_classification import classification
 from src.cleaning.cleaning import data_cleaning
+from src.pipeline.data_pipeline import run_pipeline
 
-df = pd.read_csv('data/raw/transactions.csv')
-df = pd.DataFrame(df)
-
-# 1. Clean and prepare data
-df = data_cleaning(df)
-# 2. Assign every transaction to category
-classification(df)
+# Run pipeline
+df = run_pipeline()
+print(df.head())
 # 3. Dashboard
 # -------- INCOMES --------
 # Calculate total income
@@ -39,4 +36,4 @@ top_categories(df)
 # Calculate average monthly expense
 calculate_average_monthly_expense(df)
 # Calculate top transactions
-print(top_transactions(df))
+top_transactions(df)
