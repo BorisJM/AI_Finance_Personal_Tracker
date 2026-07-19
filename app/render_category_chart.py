@@ -15,7 +15,12 @@ def render_category_chart(filtered_df):
         values="debit_amount",
         names="transaction_category",
         title="🥧 Expenses by Category",
-        hole=0.4,
-        color_discrete_sequence= px.colors.qualitative.Pastel
+        hole=0.3,
+        color_discrete_sequence= px.colors.qualitative.Pastel,
+        height=500,
+    )
+
+    fig.update_layout(
+        font=dict(size=14)
     )
     return fig

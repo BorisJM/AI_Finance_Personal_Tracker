@@ -1,13 +1,13 @@
 import streamlit as st
-import plotly.express as px
 import sys
 import pandas as pd
 from pathlib import Path
 
-from spacy.attrs import key
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
+from app.render_income_expense_chart import render_income_expense_chart
+from app.render_atv import render_atv
 from app.render_category_chart import render_category_chart
 from app.render_kpis import render_kpis
 from app.render_monthly_chart import render_monthly_chart
@@ -78,23 +78,32 @@ render_kpis(filtered_df)
 
 st.divider()
 
-# Placing for charts, plots
-left, right = st.columns(2)
-
 # Category chart
 fig = render_category_chart(filtered_df)
 
 # Monthly expenses chart
 figMonthlyExpenses = render_monthly_chart(filtered_df)
 
-with left:
-    st.plotly_chart(figMonthlyExpenses, use_container_width=True)
+# Display category pie
+st.plotly_chart(fig, width='stretch')
 
-with right:
-    st.plotly_chart(fig, width='stretch')
+# Display monthly expenses chart
+st.plotly_chart(figMonthlyExpenses, use_container_width=True)
+
+st.divider()
 
 # Tables
 render_tables(filtered_df)
 
 # Trending monthly expenses
 render_trend_chart(filtered_df)
+
+st.divider()
+
+# Average transaction value
+render_atv(filtered_df)
+
+st.divider()
+
+# Incomes and expenses on the same chart
+render_income_expense_chart(filtered_df)

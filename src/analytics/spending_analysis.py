@@ -56,3 +56,4 @@ def calculate_month_savings(df):
     monthly_savings["month_savings_percentage"] = (monthly_savings["month_savings"] / monthly_income["monthly_income"]) * 100
 
     return monthly_savings
+

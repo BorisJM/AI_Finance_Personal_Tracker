@@ -1,5 +1,3 @@
-from json.decoder import NaN
-
 import streamlit as st
 import math
 from src.analytics.income_analysis import calculate_total_income, calculate_monthly_income_growth_rate

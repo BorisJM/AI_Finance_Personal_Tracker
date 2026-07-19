@@ -1,4 +1,3 @@
-
 def get_last_transactions(df):
     # Sort by date first and get 10 last transactions
     last_10_transactions = df.sort_values(by="transaction_date", ascending=True)
@@ -6,3 +5,8 @@ def get_last_transactions(df):
     # Hide unnecessary columns
     last_10_transactions = last_10_transactions.drop(columns=['counterparty_account', 'counterparty_name', 'account_balance', 'currency_code'])
     return last_10_transactions
+
+# Function to calculate average transaction
+def get_average_transaction_value(df):
+    average_transaction_value = df["debit_amount"].mean().round(2)
+    return average_transaction_value
