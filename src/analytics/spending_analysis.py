@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.analytics.income_analysis import calculate_monthly_income
+from src.analytics.income_analysis import calculate_monthly_income, calculate_total_income
 
 
 # Function to calculate total expenses
@@ -57,3 +57,16 @@ def calculate_month_savings(df):
 
     return monthly_savings
 
+# Function to calculate savings rate
+def calculate_savings_rate(df):
+    # Saving rate
+    monthly_savings = calculate_month_savings(df)
+    total_savings = monthly_savings["month_savings"].sum()
+    total_income = calculate_total_income(df)
+    if total_savings < 0:
+        total_savings = 0
+    if total_income != 0:
+        savings_rate = (total_savings / total_income) * 100
+    else:
+        savings_rate = 0
+    return savings_rate

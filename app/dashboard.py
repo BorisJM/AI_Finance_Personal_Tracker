@@ -3,9 +3,10 @@ import sys
 import pandas as pd
 from pathlib import Path
 
-
 ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
+from src.insights.ai_insights import generate_ai_insights
+from app.render_ai_insights import render_ai_insights
 from app.render_income_expense_chart import render_income_expense_chart
 from app.render_atv import render_atv
 from app.render_category_chart import render_category_chart
@@ -90,6 +91,10 @@ st.plotly_chart(fig, width='stretch')
 # Display monthly expenses chart
 st.plotly_chart(figMonthlyExpenses, use_container_width=True)
 
+st.divider()
+
+# AI Insights
+render_ai_insights(filtered_df)
 st.divider()
 
 # Tables

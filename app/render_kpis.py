@@ -2,7 +2,7 @@ import streamlit as st
 import math
 from src.analytics.income_analysis import calculate_total_income, calculate_monthly_income_growth_rate
 from src.analytics.spending_analysis import calculate_total_expenses, calculate_monthly_expense_growth_rate, \
-    calculate_month_savings
+    calculate_month_savings, calculate_savings_rate
 
 
 def render_kpis(filtered_df):
@@ -35,12 +35,7 @@ def render_kpis(filtered_df):
     # Total savings
     monthly_savings = calculate_month_savings(filtered_df)
     total_savings = monthly_savings["month_savings"].sum()
-    if total_savings < 0:
-        total_savings = 0
-    if total_income != 0:
-        savings_rate =( total_savings / total_income) * 100
-    else:
-        savings_rate = 0
+    savings_rate = calculate_savings_rate(filtered_df)
     # Transactions count
     transactions_count = len(filtered_df)
 
