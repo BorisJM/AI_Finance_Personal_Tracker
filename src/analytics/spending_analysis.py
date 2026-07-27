@@ -43,7 +43,6 @@ def calculate_monthly_expense_growth_rate(df):
     monthly_total_expenses = calculate_monthly_expenses(df)
     # calculate monthly expense for every month
     monthly_total_expenses["trend_expense_percentage"] = monthly_total_expenses["debit_amount"].pct_change()*100
-    print(monthly_total_expenses)
 
     return monthly_total_expenses
 

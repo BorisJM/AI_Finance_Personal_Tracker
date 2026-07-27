@@ -1,5 +1,9 @@
 from src.analytics.category_analysis import category_percentages
 import pandas as pd
+import datetime
+
+from src.analytics.spending_analysis import calculate_total_expenses
+
 
 def expense_insights(df):
     # Insight 1
@@ -55,4 +59,30 @@ def expense_insights(df):
         "message": f"{largest_expense['transaction_category']}: {largest_expense["transaction_description"]}, {abs(largest_expense["debit_amount"]):.2f} zł."
     }
 
-    return [insight_category, insight_biggest_month_increase, insight_biggest_month_decrease, insight_largest_expense_transaction]
+    # Insight 5
+    # Most expensive day of the week
+    df_added_day_of_the_week = df.copy()
+    # Add day of the week column to our dataframe
+    df_added_day_of_the_week["day_of_the_week"] = df_added_day_of_the_week["transaction_date"].dt.day_name()
+    df_added_day_of_the_week = df_added_day_of_the_week.groupby("day_of_the_week")["debit_amount"].sum().reset_index()
+    most_expensive_day_of_the_week = df_added_day_of_the_week.iloc[df_added_day_of_the_week["debit_amount"].idxmin()]
+
+    insight_most_expensive_day_of_the_week = {
+        "type": "info",
+        "title": "Most expensive day of the week",
+        "message": f"Most money is spent on {most_expensive_day_of_the_week["day_of_the_week"]}."
+    }
+
+    # Insight 6
+    # Most money spent for one seller
+    grouped_by_sellers = df.copy().groupby("transaction_description")
+    money_spent_sellers = grouped_by_sellers["debit_amount"].sum().reset_index()
+    most_money_spent_seller = money_spent_sellers.iloc[money_spent_sellers["debit_amount"].idxmin()]
+    seller_percentage_of_whole_spending = (most_money_spent_seller["debit_amount"] / calculate_total_expenses(df)) * 100
+
+    insight_most_money_spent_seller = {
+        "type": "info",
+        "title": "Most money spent seller",
+        "message": f"{most_money_spent_seller['transaction_description']} accounts for {seller_percentage_of_whole_spending:.2f}% of your total spending",
+    }
+    return [insight_category, insight_biggest_month_increase, insight_biggest_month_decrease, insight_largest_expense_transaction, insight_most_expensive_day_of_the_week, insight_most_money_spent_seller]
