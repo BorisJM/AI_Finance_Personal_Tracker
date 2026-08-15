@@ -5,7 +5,8 @@ a) Transaction
 - transaction_date
 - amount
 - merchant_id
-- description
+- original_description
+- cleaned_description
 - category_id
 - account_id
 - transaction_type
