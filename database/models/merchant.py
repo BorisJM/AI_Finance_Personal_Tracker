@@ -1,7 +1,10 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from transaction import Transaction
-from database.base import Base
+from ..base import Base
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .transaction import Transaction
 
 
 class Merchant(Base):

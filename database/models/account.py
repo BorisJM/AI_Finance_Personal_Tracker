@@ -4,10 +4,12 @@ from typing import List
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from base import Base
-from models.transaction import Currency
-from models.transaction import Transaction
+from ..base import Base
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from .transaction import Transaction
+from .enums import Currency
 
 class Account(Base):
     __tablename__ = "account"
@@ -17,4 +19,4 @@ class Account(Base):
     currency: Mapped[Currency] = mapped_column(nullable=False)
     created_at: Mapped[datetime.date] # Upewnić się czy to wgl jest potrzebne
     # Account -> Transactions relationship one-to-many
-    transaction: Mapped[List["Transaction"]] = relationship(back_populates="account")
+    transactions: Mapped[List["Transaction"]] = relationship("Transaction", back_populates="account")

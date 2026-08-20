@@ -3,14 +3,12 @@ from enum import Enum
 from typing import List
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from transaction import Transaction
-from database.base import Base
+from typing import TYPE_CHECKING
 
-class Status(Enum):
-    SUCCESS = 'SUCCESS'
-    ERROR = 'ERROR'
-    PENDING = 'PENDING'
-
+if TYPE_CHECKING:
+    from .transaction import Transaction
+from ..base import Base
+from .enums import Status
 
 class Import(Base):
     __tablename__ = "source_file"

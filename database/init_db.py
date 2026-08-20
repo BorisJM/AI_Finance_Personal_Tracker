@@ -1,4 +1,5 @@
-from database.base import metadata_obj
+from database.base import Base
 from database.engine import engine
+from database import models
 
-metadata_obj.create_all(engine)
+Base.metadata.create_all(engine)

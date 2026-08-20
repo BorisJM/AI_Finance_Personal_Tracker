@@ -3,8 +3,11 @@ import decimal
 
 from sqlalchemy import String, Numeric, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from category import Category
-from base import Base
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .category import Category
+from ..base import Base
 
 class Budget(Base):
     __tablename__ = "budget"
@@ -14,4 +17,4 @@ class Budget(Base):
     end_date: Mapped[datetime.date] = mapped_column(nullable=False)
     # Budget -> Category relationship many-to-one
     category_id: Mapped[int] = mapped_column(ForeignKey("category.id"))
-    category: Mapped["Category"] = relationship("Category", back_populates="budget")
+    category: Mapped["Category"] = relationship("Category", back_populates="budgets")
