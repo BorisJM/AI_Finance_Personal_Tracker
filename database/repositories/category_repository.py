@@ -3,7 +3,7 @@ from sqlalchemy import select, delete
 from database.models.category import Category
 from database.models.transaction import Transaction
 from database.models.budget import Budget
-from models.enums import Colors
+from database.models.enums import Colors
 
 
 # ----------- BUSINESS LOGIC -----------
@@ -20,7 +20,7 @@ class CategoryRepository:
 
     # 1. Find by ID
     def get_by_id(self, category_id: int) -> Category | None:
-        stmt = select(Category).where(Category.id == id)
+        stmt = select(Category).where(Category.id == category_id)
         found_category = self.session.execute(stmt).scalar_one_or_none()
         return found_category
 
@@ -66,17 +66,19 @@ class CategoryRepository:
         category = self.session.execute(select(Category).where(Category.id == category_id)).scalar_one_or_none()
         if category is None:
             return False
-        stmt_transaction = select(Transaction).where(Transaction.category_id == category_id).exists()
-        found_transaction = self.session.scalar(stmt_transaction)
+        stmt_transaction = select(Transaction).where(Transaction.category_id == category_id)
+        found_transaction = self.session.execute(stmt_transaction).scalar_one_or_none()
+
         # Check if any transaction has CATEGORY
         # If it does then we return False
-        if found_transaction:
+        if found_transaction is not None:
             return False
-        stmt_budget = select(Budget).where(Budget.category_id == category_id).exists()
-        found_budget = self.session.scalar(stmt_budget)
+        stmt_budget = select(Budget).where(Budget.category_id == category_id)
+        found_budget = self.session.execute(stmt_budget).scalar_one_or_none()
+
         # Check if any budget has CATEGORY
         # If it does then we return False
-        if found_budget:
+        if found_budget is not None:
             return False
 
         # Else delete the category
