@@ -1,5 +1,5 @@
 from enum import Enum
-
+from database.models.source_file import Import
 # Currency ENUM class with options
 class Currency(Enum):
     USD = "USD"
