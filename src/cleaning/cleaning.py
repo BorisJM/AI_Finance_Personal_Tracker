@@ -7,8 +7,6 @@ from src.cleaning.data_conversion import data_conversion
 def data_cleaning(df):
     # Drop duplicates from the table.
     df.drop_duplicates()
-    # Drop useless column
-    df.drop(columns=['Data rozliczenia', 'Numer rachunku/karty'], inplace=True)
     ''' --- Data conversion ---
     - Convert column names to LowerCase, remove Whitespaces and convert to SnakeCase
     - Remove polish symbols from column names with unidecode 

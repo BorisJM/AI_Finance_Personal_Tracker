@@ -5,7 +5,9 @@ def data_conversion(df):
     df.columns = [unidecode(column_name.strip().lower().replace(" ", "_")) for column_name in df.columns]
     # Translate columns to English
     translated_columns = [
+        'account_number',
         'transaction_date',
+        'settlement_date',
         'transaction_type',
         'counterparty_account',
         'counterparty_name',
