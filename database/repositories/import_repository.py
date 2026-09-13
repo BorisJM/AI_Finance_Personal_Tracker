@@ -19,15 +19,10 @@ class ImportRepository:
         self.session = session
 
     # 1. Create Import
-    def create_source_file(self, bank: str, transactions: list[Transaction]) -> Import:
-        # Protection from 0 transactions
-        if not transactions:
-            raise ValueError("Transactions cannot be empty")
+    def create_source_file(self, bank: str, date: datetime.date) -> Import:
         # Current date
         created_at = datetime.datetime.now()
-        # Last transaction date
-        date = transactions[-1].transaction_date
-        new_import = Import(bank=bank, date=date, created_at=created_at, transactions=transactions, rows_count=len(transactions))
+        new_import = Import(bank=bank, date=date, created_at=created_at, rows_count=0, import_status=Status.PENDING)
         self.session.add(new_import)
         return new_import
     # 2. Get by ID
@@ -72,7 +67,7 @@ class ImportRepository:
         return result
 
     # 6. Update (bank, import_status)
-    def update(self, import_id: int, import_status: Status | None = None, bank: str | None = None) -> Import | None:
+    def update(self, import_id: int, import_status: Status | None = None, bank: str | None = None, rows_count: int | None = None) -> Import | None:
 
         import_file = self.session.get(Import, import_id)
         if import_file is None:
@@ -83,5 +78,8 @@ class ImportRepository:
 
         if bank is not None:
             import_file.bank = bank
+
+        if rows_count is not None:
+            import_file.rows_count = rows_count
 
         return import_file
