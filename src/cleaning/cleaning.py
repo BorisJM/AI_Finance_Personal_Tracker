@@ -12,6 +12,7 @@ def data_cleaning(df):
     - Remove polish symbols from column names with unidecode 
     '''
     data_conversion(df)
+    df["transaction_original_description"] = df["transaction_description"]
     # Cleaning description, regex cleaning, remove numbers, symbols, non-word characters
     df["transaction_description"] = df["transaction_description"].apply(clean_transactions)
     # For empty fields we will put name of receiver/sender

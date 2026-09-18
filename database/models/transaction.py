@@ -21,6 +21,8 @@ class Transaction(Base):
     currency: Mapped[Currency]
     transaction_date: Mapped[datetime.date]
     amount: Mapped[decimal.Decimal]
+    # Transaction identifier unique
+    transaction_identifier: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     # Transaction -> Merchant MANY-to-ONE relationship
     merchant_id: Mapped[int] = mapped_column(ForeignKey("merchant.id"))
     merchant: Mapped["Merchant"] = relationship("Merchant", back_populates="transactions")

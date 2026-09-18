@@ -7,7 +7,7 @@ from database.models.transaction import Transaction
 from database.models.category import Category
 from database.models.merchant import Merchant
 from database.models.account import Account
-from models.enums import TransactionType
+from database.models.enums import TransactionType
 
 
 # ----------- BUSINESS LOGIC -----------
@@ -35,11 +35,11 @@ class TransactionRepository:
         self.session = session
 
     # 1. Create transaction
-    def create(self, currency: Currency, transaction_date: datetime.date, amount: Decimal, merchant_id: int, original_description: str,
+    def create(self, transaction_identifier: str, currency: Currency, transaction_date: datetime.date, amount: Decimal, merchant_id: int, original_description: str,
                cleaned_description: str, category_id: int, account_id: int, transaction_type: TransactionType, source_file_id: int, counterparty_account: str) -> Transaction:
         new_transaction = Transaction(currency=currency, transaction_date=transaction_date, amount=amount, merchant_id=merchant_id, original_description=original_description,
                                       cleaned_description=cleaned_description, category_id=category_id, account_id=account_id, transaction_type=transaction_type,
-                                      source_file_id=source_file_id, counterparty_account=counterparty_account)
+                                      source_file_id=source_file_id, counterparty_account=counterparty_account, transaction_identifier=transaction_identifier)
 
         self.session.add(new_transaction)
         return new_transaction
@@ -117,3 +117,7 @@ class TransactionRepository:
             updated_transaction.cleaned_description = cleaned_description
 
         return updated_transaction
+
+    # 5. Get transaction by identifier
+    def get_by_identifier(self, transaction_identifier: str) -> Transaction | None:
+        return self.session.scalar(select(Transaction).where(Transaction.transaction_identifier == transaction_identifier))
