@@ -17,7 +17,7 @@ class Category(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     icon: Mapped[str] = mapped_column(String(255), unique=True)
-    color: Mapped[Colors]
+    color: Mapped[str] = mapped_column(String(9))
     # Category -> Transactions relationship One-to-Many
     transactions: Mapped[list["Transaction"]] = relationship("Transaction", back_populates="category")
     # Budget relationship One-To-Many

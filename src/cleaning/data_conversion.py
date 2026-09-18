@@ -32,3 +32,5 @@ def data_conversion(df):
     df["transaction_date"] = pd.to_datetime(df["transaction_date"])
     # 6. Create month column for every transaction
     df["transaction_month"] = df["transaction_date"].dt.month_name()
+    # 7. Fill NaN for counterparty_name
+    df["counterparty_name"] = df["counterparty_name"].fillna("")

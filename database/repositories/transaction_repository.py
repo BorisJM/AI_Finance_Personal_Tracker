@@ -120,4 +120,4 @@ class TransactionRepository:
 
     # 5. Get transaction by identifier
     def get_by_identifier(self, transaction_identifier: str) -> Transaction | None:
-        return self.session.scalar(select(Transaction).where(Transaction.transaction_identifier == transaction_identifier))
+        return self.session.execute(select(Transaction).where(Transaction.transaction_identifier == transaction_identifier)).scalar_one_or_none()

@@ -6,12 +6,14 @@ with open("./data/dictionaries/locations.json", "r", encoding="utf-8") as f:
     locations = json.load(f)
 
 
-def extract_location(text: str) -> str:
+def extract_location(text: str, counterparty_name: str) -> str:
     text = text.upper()
 
     for location in locations:
         pattern = rf"\b{re.escape(location)}\b"
-
         if re.search(pattern, text):
             return location
-    return None
+
+        elif re.search(pattern, counterparty_name):
+            return location
+    return "Undefined location"

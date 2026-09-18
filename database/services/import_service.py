@@ -53,8 +53,9 @@ class ImportService:
             # We need to loop through every row to check if merchant exists if not then create a new one
             for index, row in df.iterrows():
                 description = row["transaction_description"]
+                counterparty_name = row["counterparty_name"]
                 normalized_name = normalize_merchant_name(description)
-                location = extract_location(description)
+                location = extract_location(description, counterparty_name)
                 merchant = self.merchant_repo.get_by_normalized_name_and_location(normalized_name=normalized_name, location=location)
                 if merchant is None:
                     merchant = self.merchant_repo.create(name=f"{normalized_name} - {location}", normalized_name=normalized_name, location=location)

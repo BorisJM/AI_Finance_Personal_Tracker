@@ -1,5 +1,5 @@
 from src.classification.detect_category import detect_transaction_category
-from src.utils import generate_transaction_identifier
+from src.utils.generate_transaction_identifier import generate_transaction_identifier
 
 
 def classification(df):
