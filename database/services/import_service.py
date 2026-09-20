@@ -34,7 +34,6 @@ class ImportService:
             df, bank = run_pipeline(file_path)
             account_number = df["account_number"].iloc[0]
             date = df["transaction_date"].max().date()
-
             # 2. Create import
             new_import = self.import_repo.create_source_file(bank=bank, date=date)
 
@@ -59,7 +58,7 @@ class ImportService:
                 merchant = self.merchant_repo.get_by_normalized_name_and_location(normalized_name=normalized_name, location=location)
                 if merchant is None:
                     merchant = self.merchant_repo.create(name=f"{normalized_name} - {location}", normalized_name=normalized_name, location=location)
-
+                    self.session.flush() # Necessary line, so we can insert category to database and immediately get access to Merchant ID
                 # Assign to every row merchant id it is related to
                 df.loc[index, "merchant_id"] = merchant.id
 
@@ -71,24 +70,31 @@ class ImportService:
                 if category is None:
                     category = CategoryType(category_name)
                     category = self.category_repo.create(name=category_name, icon=category.icon, color=category.color)
+                    self.session.flush() # Necessary line, so we can insert category to database and immediately get access to CATEGORY ID
                 # Assign to every row category id it is related to
                 df.loc[index, "category_id"] = category.id
 
 
             # 6. Create Transactions
             for _, row in df.iterrows():
-                transaction_identifier = row["transaction_identifier"]
-                # Check if transaction already created
-                transaction = self.transaction_repo.get_by_identifier(transaction_identifier)
                 transaction_date = row["transaction_date"]
+                # Check if transaction already created
+                transaction_identifier = row["transaction_identifier"]
+                transaction = self.transaction_repo.get_by_identifier(transaction_identifier)
                 currency = row["currency_code"]
                 amount = row["debit_amount"] if row["debit_amount"] < 0 else row["credit_amount"]
                 transaction_merchant_id = row["merchant_id"]
                 transaction_category_id = row["category_id"]
                 original_description = row["transaction_original_description"]
                 cleaned_description = row["transaction_description"]
-                transaction_type = TransactionType(row["transaction_type"].upper())
+                transaction_type = TransactionType("INCOME" if row["credit_amount"] > 0 else "EXPENSE")
                 counterparty_account = row['counterparty_account']
+                # Check if merchant_id exists
+                if transaction_merchant_id is None:
+                    raise ValueError(f"Merchant ID is None for transaction: {transaction_identifier}")
+                # Check if category_id exists
+                if transaction_category_id is None:
+                    raise ValueError(f"Category ID is None for transaction: {transaction_identifier}")
                 # If not then create transaction
                 if transaction is None:
                     transaction = self.transaction_repo.create(currency=Currency(currency), transaction_date=transaction_date, amount=amount, merchant_id=transaction_merchant_id, original_description=original_description,

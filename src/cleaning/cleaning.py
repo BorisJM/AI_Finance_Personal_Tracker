@@ -13,6 +13,7 @@ def data_cleaning(df):
     '''
     data_conversion(df)
     df["transaction_original_description"] = df["transaction_description"]
+    df["transaction_original_description"] = df["transaction_original_description"].fillna("")
     # Cleaning description, regex cleaning, remove numbers, symbols, non-word characters
     df["transaction_description"] = df["transaction_description"].apply(clean_transactions)
     # For empty fields we will put name of receiver/sender

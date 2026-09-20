@@ -26,7 +26,10 @@ def data_conversion(df):
     df["account_balance"] = pd.to_numeric(df["account_balance"], errors='coerce')
     df["credit_amount"] = pd.to_numeric(df["credit_amount"], errors='coerce')
     df["debit_amount"] = pd.to_numeric(df["debit_amount"], errors='coerce')
+    df["credit_amount"] = df["credit_amount"].fillna(0)
+    df["debit_amount"] = df["debit_amount"].fillna(0)
     # 4. Counterparty to string
+    df["counterparty_account"] = df["counterparty_account"].fillna("")
     df["counterparty_account"] = df["counterparty_account"].astype(str)
     # 5. Convert string to Date Format
     df["transaction_date"] = pd.to_datetime(df["transaction_date"])
