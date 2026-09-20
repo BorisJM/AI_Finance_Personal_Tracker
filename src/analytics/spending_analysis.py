@@ -17,7 +17,6 @@ def calculate_monthly_expenses(df):
     total_expenses_per_month["transaction_month"] = pd.Categorical(total_expenses_per_month["transaction_month"], categories=months,
                                                            ordered=True)
     total_expenses_per_month.sort_values(by=["transaction_month"], inplace=True)
-    print(total_expenses_per_month)
     return total_expenses_per_month
 
 # Function to calculate top 10 expenses
