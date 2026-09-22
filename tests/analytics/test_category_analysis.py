@@ -33,24 +33,23 @@ def transactions_df():
             0.00,
             3000.00,
         ],
-        "transaction_month": [
-            "January",
-            "January",
-            "January",
-            "February",
-            "February",
-        ],
+        "transaction_date": pd.to_datetime([
+            "2026-01-10",
+            "2026-01-15",
+            "2026-01-20",
+            "2026-02-10",
+            "2026-02-15",
+        ]),
     })
-
 
 def test_expenses_by_category(transactions_df):
     result = expenses_by_category(transactions_df)
 
     result = result.set_index("transaction_category")
 
-    assert result.loc["Groceries", "debit_amount"] == -150.00
-    assert result.loc["Shopping", "debit_amount"] == -200.00
-    assert result.loc["Food", "debit_amount"] == -50.00
+    assert result.loc["Groceries", "expense_amount"] == 150.00
+    assert result.loc["Shopping", "expense_amount"] == 200.00
+    assert result.loc["Food",  "expense_amount"] == 50.00
 
     assert "Income" not in result.index
 
@@ -77,7 +76,7 @@ def test_category_percentage_per_month(transactions_df):
     result = category_percentage_per_month(transactions_df)
 
     january = result[
-        (result["transaction_month"] == "January")
+        (result["transaction_period"] == pd.Period("2026-01"))
         & (result["transaction_category"] == "Shopping")
     ].iloc[0]
 

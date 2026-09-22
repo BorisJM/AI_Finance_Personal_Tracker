@@ -47,14 +47,6 @@ def transactions_df():
             "2026-02-10",
             "2026-02-15",
         ]),
-        "transaction_month": [
-            "January",
-            "January",
-            "January",
-            "February",
-            "February",
-            "February",
-        ],
     })
 
 

@@ -23,7 +23,7 @@ def saving_insights(df):
         insight_best_savings_month = {
             "type": "success",
             "title": "Best savings month",
-            "message": f"{best_savings_month["transaction_month"]} is your best savings month. You saved: {best_savings_month['month_savings']} zł",
+            "message": f"{best_savings_month["transaction_period"]} is your best savings month. You saved: {best_savings_month['month_savings']} zł",
         }
         insights.append(insight_best_savings_month)
     except Exception:

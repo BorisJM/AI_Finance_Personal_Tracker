@@ -5,10 +5,10 @@ from src.insights.savings_insights import saving_insights
 
 def test_saving_insights_savings_rate():
     df = pd.DataFrame({
-        "transaction_month": [
-            "January",
-            "February",
-        ],
+        "transaction_date": pd.to_datetime([
+            "2026-01-10",
+            "2026-02-20",
+        ]),
         "debit_amount": [
             -800.00,
             -600.00,
@@ -33,11 +33,11 @@ def test_saving_insights_savings_rate():
 
 def test_saving_insights_best_savings_month():
     df = pd.DataFrame({
-        "transaction_month": [
-            "January",
-            "February",
-            "March",
-        ],
+        "transaction_date": pd.to_datetime([
+            "2026-01-10",
+            "2026-02-20",
+            "2026-03-10",
+        ]),
         "debit_amount": [
             -800.00,
             -500.00,
@@ -59,5 +59,5 @@ def test_saving_insights_best_savings_month():
     # March savings = 1500
 
     assert best_month_insight["title"] == "Best savings month"
-    assert "February" in best_month_insight["message"]
+    assert "2026-02" in best_month_insight["message"]
     assert "2500.0" in best_month_insight["message"]

@@ -98,4 +98,34 @@ def test_get_last_transactions_removes_sensitive_columns(transactions_df):
 def test_get_average_transaction_value(transactions_df):
     result = get_average_transaction_value(transactions_df)
 
-    assert result == pytest.approx(-48.00)
+    assert result == pytest.approx(48.00)
+
+def test_get_last_transactions_returns_10_latest():
+    df = pd.DataFrame({
+        "transaction_date": pd.to_datetime([
+            "2026-01-01",
+            "2026-01-02",
+            "2026-01-03",
+            "2026-01-04",
+            "2026-01-05",
+            "2026-01-06",
+            "2026-01-07",
+            "2026-01-08",
+            "2026-01-09",
+            "2026-01-10",
+            "2026-01-11",
+            "2026-01-12",
+        ]),
+        "transaction_description": [f"Transaction {i}" for i in range(1, 13)],
+        "debit_amount": [-10.00] * 12,
+        "counterparty_account": ["x"] * 12,
+        "counterparty_name": ["x"] * 12,
+        "account_balance": [1000.00] * 12,
+        "currency_code": ["PLN"] * 12,
+    })
+
+    result = get_last_transactions(df)
+
+    assert len(result) == 10
+    assert result.iloc[0]["transaction_description"] == "Transaction 3"
+    assert result.iloc[-1]["transaction_description"] == "Transaction 12"

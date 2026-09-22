@@ -1,11 +1,15 @@
-import numpy as np
-
-from src.analytics.category_analysis import category_percentages
 import pandas as pd
 
+from src.analytics.analytics_helpers import (
+    prepare_spending_data,
+    add_transaction_period,
+)
+from src.analytics.category_analysis import category_percentages
 from src.analytics.income_analysis import calculate_monthly_income
-from src.analytics.spending_analysis import calculate_total_expenses, calculate_monthly_expenses
-
+from src.analytics.spending_analysis import (
+    calculate_total_expenses,
+    calculate_monthly_expenses,
+)
 
 def expense_insights(df):
     insights = []
@@ -26,31 +30,22 @@ def expense_insights(df):
     # Insight 2
     # Biggest increase compared to previous month
     try:
-        biggest_category_increase_month = df.copy()
+        df_period = add_transaction_period(df)
+        df_period = prepare_spending_data(df)
         # Ascending sorting by month name
-        months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
-                  "November", "December"]
-        biggest_category_increase_month["transaction_month"] = pd.Categorical(
-            biggest_category_increase_month["transaction_month"],
-            categories=months,
-            ordered=True)
-        biggest_category_increase_month.sort_values(by=["transaction_month"], inplace=True)
-        biggest_category_increase_month = \
-        biggest_category_increase_month.groupby(["transaction_month", "transaction_category"])[
-            "debit_amount"].sum().reset_index().sort_values(["transaction_category"], ascending=True)
-
-        biggest_category_increase_month["percentage_diff"] = \
-        biggest_category_increase_month.groupby("transaction_category")["debit_amount"].pct_change() * 100
-        # If previous month has 0 expenses -> will return inf, code below is used in case of INF
-        biggest_category_increase_month["percentage_diff"] = biggest_category_increase_month["percentage_diff"].replace(
-            [np.inf, -np.inf], np.nan)
-        biggest_expense = biggest_category_increase_month.iloc[
-            biggest_category_increase_month["percentage_diff"].idxmax()]
-
+        category_monthly = (
+            df.period.groupby(["transaction_period", "transaction_category"])["expense_amount"].sum().reset_index()
+        )
+        category_monthly = category_monthly.sort_values(["transaction_category", "transaction_period"])
+        category_monthly["percentage_diff"] = (
+            category_monthly.groupby("transaction_category")["expense_amount"].pct_change()*100
+        )
+        category_monthly["percentage_diff"] = category_monthly["percentage_diff"].replace([float("inf"), float("-inf")], pd.NA)
+        biggest_increase = category_monthly.loc[category_monthly["percentage_diff"].idxmax()]
         insight_biggest_month_increase = {
             "type": "warning",
-            "title": f"{biggest_expense["transaction_category"]} spending increased",
-            "message": f"{biggest_expense["transaction_category"]} spending increased by {biggest_expense["percentage_diff"]:.2f}% compared to last month.",
+            "title": f"{biggest_increase["transaction_category"]} spending increased",
+            "message": f"{biggest_increase["transaction_category"]} spending increased by {biggest_increase["percentage_diff"]:.2f}% compared to last month.",
         }
         insights.append(insight_biggest_month_increase)
     except Exception:

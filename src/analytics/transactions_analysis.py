@@ -1,3 +1,5 @@
+from src.analytics.analytics_helpers import prepare_spending_data
+
 def get_last_transactions(df):
     # Sort by date first and get 10 last transactions
     last_10_transactions = df.sort_values(by="transaction_date", ascending=True)
@@ -8,5 +10,12 @@ def get_last_transactions(df):
 
 # Function to calculate average transaction
 def get_average_transaction_value(df):
-    average_transaction_value = df["debit_amount"].mean().round(2)
+    df = prepare_spending_data(df)
+
+    average_transaction_value = (
+        df["expense_amount"]
+        .mean()
+        .round(2)
+    )
+
     return average_transaction_value
