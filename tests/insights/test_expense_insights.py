@@ -96,3 +96,59 @@ def test_spending_vs_income_with_zero_income():
     )
 
     assert "0%" in insight["message"]
+
+def test_category_spending_increase(transactions_df):
+    result = expense_insights(transactions_df)
+
+    insight = next(
+        x for x in result
+        if x["title"].endswith("spending increased")
+    )
+
+    assert insight["type"] == "warning"
+    assert "increased by" in insight["message"]
+
+
+def test_category_spending_decrease(transactions_df):
+    result = expense_insights(transactions_df)
+
+    insight = next(
+        x for x in result
+        if x["title"].endswith("spending decreased")
+    )
+
+    assert insight["type"] == "info"
+    assert "decreased by" in insight["message"]
+
+
+def test_most_expensive_day(transactions_df):
+    result = expense_insights(transactions_df)
+
+    insight = next(
+        x for x in result
+        if x["title"] == "Most expensive day of the week"
+    )
+
+    assert "Thursday" in insight["message"]
+
+
+def test_most_money_spent_seller(transactions_df):
+    result = expense_insights(transactions_df)
+
+    insight = next(
+        x for x in result
+        if x["title"] == "Most money spent seller"
+    )
+
+    assert "Allegro" in insight["message"]
+
+
+def test_highest_spending_month(transactions_df):
+    result = expense_insights(transactions_df)
+
+    insight = next(
+        x for x in result
+        if x["title"] == "Highest spending month"
+    )
+
+    assert "2026-01" in insight["message"]

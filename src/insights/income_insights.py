@@ -1,53 +1,80 @@
-import pandas as pd
+from src.analytics.analytics_helpers import prepare_spending_data, add_transaction_period
+
 
 def income_insights(df):
     insights = []
-    # Income Insights
-    try:
-        # 1. Largest income
-        income_analysis = df.copy()
-        largest_income = income_analysis.iloc[income_analysis["credit_amount"].idxmax()]
 
-        # -------- Insight message --------
+    df = prepare_spending_data(df)
+    df = add_transaction_period(df)
 
-        insight_largest_income = {
+    # 1. LARGEST INCOME
+
+    income_transactions = df[df["income_amount"] > 0]
+
+    if not income_transactions.empty:
+        largest_income = income_transactions.loc[
+            income_transactions["income_amount"].idxmax()
+        ]
+
+        insights.append({
             "type": "info",
-            "title": f"Largest income: {largest_income["credit_amount"]:.2f} zł",
-            "message": f"{largest_income["transaction_description"].lower()}"
-        }
-        insights.append(insight_largest_income)
-    except Exception:
-        pass
-    try:
-        # 2. Income monthly change, increased / decreased in %
-        monthly_income_analysis = df.copy()
-        # Sorted by months
-        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-                  'November', 'December']
-        monthly_income_analysis['transaction_month'] = pd.Categorical(df['transaction_month'], categories=months,
-                                                                      ordered=True)
-        monthly_income_analysis = monthly_income_analysis.groupby("transaction_month")["credit_amount"].sum().reset_index()
-        # Difference in percentages monthly
-        monthly_income_analysis["income_percentage_diff"] = (monthly_income_analysis["credit_amount"].pct_change() * 100).round(2)
-        monthly_income_analysis["has_increased"] = (monthly_income_analysis["income_percentage_diff"] > 0)
-        # Select last two months
-        income_last_two_months = monthly_income_analysis.tail(2)
-        # Income previous month
-        income_previous_month = income_last_two_months.iloc[0]
-        # Income last month
-        income_last_month = income_last_two_months.iloc[1]
+            "title": (
+                f"Largest income: "
+                f"{largest_income['income_amount']:.2f} zł"
+            ),
+            "message": (
+                f"{largest_income['transaction_description'].lower()}"
+            ),
+        })
 
+    # 2. MONTHLY INCOME CHANGE
 
-        # -------- Insight message --------
+    monthly_income = (
+        df.groupby("transaction_period")["income_amount"]
+        .sum()
+        .reset_index(name="monthly_income")
+        .sort_values("transaction_period")
+    )
 
-        insight_income_increased_decreased = {
-            "type": f"{"success" if income_last_month["has_increased"] else "warning"}",
-            "title": f"Income has {"increased" if income_last_month["has_increased"] else "decreased"}!",
-            "message": f"Previous month {income_previous_month["transaction_month"]} was {income_previous_month["credit_amount"]:.2f} zł compared to last month {income_last_month["transaction_month"]} {income_last_month["credit_amount"]} zł, the difference is {income_last_month["income_percentage_diff"]:.2f}% !",
-        }
-        insights.append(insight_income_increased_decreased)
-    except Exception:
-        pass
-    # 3. Insight
+    if len(monthly_income) >= 2:
+        monthly_income["income_percentage_diff"] = (
+            monthly_income["monthly_income"]
+            .pct_change()
+            * 100
+        )
+
+        previous_month = monthly_income.iloc[-2]
+        last_month = monthly_income.iloc[-1]
+
+        income_increased = (
+            last_month["income_percentage_diff"] > 0
+        )
+
+        income_change_type = (
+            "success"
+            if income_increased
+            else "warning"
+        )
+
+        income_change_word = (
+            "increased"
+            if income_increased
+            else "decreased"
+        )
+
+        insights.append({
+            "type": income_change_type,
+            "title": f"Income has {income_change_word}!",
+            "message": (
+                f"Previous month "
+                f"{previous_month['transaction_period']} was "
+                f"{previous_month['monthly_income']:.2f} zł "
+                f"compared to last month "
+                f"{last_month['transaction_period']} "
+                f"{last_month['monthly_income']:.2f} zł, "
+                f"the difference is "
+                f"{last_month['income_percentage_diff']:.2f}%!"
+            ),
+        })
 
     return insights

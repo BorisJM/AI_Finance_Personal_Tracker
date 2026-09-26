@@ -1,37 +1,56 @@
+from src.analytics.analytics_helpers import prepare_spending_data
+
 
 def trend_insights(df):
     insights = []
-    # Insight: Unusual expense
-    # Now let's define what is unusual expense
-    # The expenses that will be larger than calculated value below, are going to be UNUSUAL
-    threshold = df["debit_amount"].abs().quantile(0.95)
-    expenses_df = df.copy()
-    expenses_df["expense"] =  expenses_df["debit_amount"].abs()
-    category_average_value = expenses_df.groupby("transaction_category")["expense"].mean()
-    expenses_df["category_average"] = expenses_df["transaction_category"].map(category_average_value)
-    is_top_5_percent = (expenses_df["expense"] > threshold)
 
-    is_large_for_category = (
-        expenses_df["expense"] >
-        expenses_df["category_average"] * 3
+    df = prepare_spending_data(df)
+
+    # Define unusual expense:
+    # - expense is in the top 5% of all expenses
+    # OR
+    # - expense is more than 3x the average expense
+    #   for its category
+
+    threshold = df["expense_amount"].quantile(0.95)
+
+    category_average = (
+        df.groupby("transaction_category")["expense_amount"]
+        .mean()
     )
 
-    expenses_df = expenses_df[
+    df["category_average"] = (
+        df["transaction_category"]
+        .map(category_average)
+    )
+
+    is_top_5_percent = (
+        df["expense_amount"] > threshold
+    )
+
+    is_large_for_category = (
+        df["expense_amount"]
+        > df["category_average"] * 3
+    )
+
+    unusual_expenses = df[
         is_top_5_percent | is_large_for_category
     ]
-    try:
-        largest_unusual_expense = expenses_df.loc[expenses_df["expense"].idxmax()]
-        unusual_expense_insight = {
+
+    if not unusual_expenses.empty:
+        largest_unusual_expense = unusual_expenses.loc[
+            unusual_expenses["expense_amount"].idxmax()
+        ]
+
+        insights.append({
             "type": "warning",
             "title": "Large unusual expense detected.",
             "message": (
-                f"You spent {largest_unusual_expense["expense"]} zł "
-                f"in category '{largest_unusual_expense["transaction_category"]}'. "
-            )
-        }
-        insights.append(unusual_expense_insight)
-    except Exception:
-        pass
+                f"You spent "
+                f"{largest_unusual_expense['expense_amount']:.2f} zł "
+                f"in category "
+                f"'{largest_unusual_expense['transaction_category']}'."
+            ),
+        })
+
     return insights
-
-

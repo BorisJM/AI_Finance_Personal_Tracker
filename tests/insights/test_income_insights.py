@@ -72,7 +72,6 @@ def test_income_change_last_month(transactions_df):
         if x["title"] == "Income has increased!"
     )
 
-    assert "January" in insight["message"]
-    assert "February" in insight["message"]
+    assert "2026-01" in insight["message"]
+    assert "2026-02" in insight["message"]
     assert "16.67%" in insight["message"]
-
