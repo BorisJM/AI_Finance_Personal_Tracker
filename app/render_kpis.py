@@ -13,12 +13,12 @@ def render_kpis(filtered_df):
         filtered_df
     )["expense_growth_rate"]
     if len(expenses_month_rate) > 0:
-        expenses_month_rate = expenses_month_rate.iloc[-1].round()
+        expenses_month_rate = expenses_month_rate.iloc[-1]
         if math.isnan(expenses_month_rate):
             delta_expenses = ""
         else:
             # Delta string format
-            delta_expenses = f"{"" if expenses_month_rate < 0 else "+"}{expenses_month_rate:}%"
+            delta_expenses = f"{"" if expenses_month_rate < 0 else "+"}{expenses_month_rate:.2f}%"
     else:
         delta_expenses = ""
     # Total income
@@ -26,17 +26,19 @@ def render_kpis(filtered_df):
     # Income growth rate
     income_month_rate = calculate_monthly_income_growth_rate(filtered_df)["income_growth_rate"]
     if len(income_month_rate) > 0:
-        income_month_rate = income_month_rate.iloc[-1].round()
+        income_month_rate = income_month_rate.iloc[-1]
         if math.isnan(income_month_rate):
             delta_income = ""
         else:
             # Delta string format
-            delta_income = f"{"" if income_month_rate < 0 else "+"}{income_month_rate:}%"
+            delta_income = f"{"" if income_month_rate < 0 else "+"}{income_month_rate:.2f}%"
     else:
         delta_income = ""
     # Total savings
     monthly_savings = calculate_month_savings(filtered_df)
     total_savings = monthly_savings["month_savings"].sum()
+    if total_savings < 0:
+        total_savings = 0
     savings_rate = calculate_savings_rate(filtered_df)
     # Transactions count
     transactions_count = len(filtered_df)

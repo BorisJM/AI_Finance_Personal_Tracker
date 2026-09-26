@@ -63,9 +63,7 @@ def calculate_month_savings(df):
     df = add_transaction_period(df)
     df = prepare_spending_data(df)
     monthly_savings = (df.groupby("transaction_period").agg(monthly_income=("income_amount", "sum"),monthly_expenses=("expense_amount", "sum")).reset_index())
-
     monthly_savings["month_savings"] = (monthly_savings["monthly_income"] - monthly_savings["monthly_expenses"])
-
     monthly_savings["month_savings_percentage"] = (monthly_savings["month_savings"] / monthly_savings["monthly_income"] * 100)
 
     return monthly_savings

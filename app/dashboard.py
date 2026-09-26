@@ -12,8 +12,13 @@ from app.render_category_chart import render_category_chart
 from app.render_kpis import render_kpis
 from app.render_monthly_chart import render_monthly_chart
 from app.render_tables import render_tables
+from sqlalchemy.orm import Session
+from database.engine import engine
 from app.render_trend_chart import render_trend_chart
-from src.pipeline.data_pipeline import run_pipeline
+from src.data.transaction_dataframe import (
+get_transactions_dataframe,
+prepare_analytics_data
+)
 
 # Page config
 st.set_page_config(
@@ -29,8 +34,12 @@ st.caption("Overview of your personal finances")
 file_path = ROOT_DIR / "data" / "raw" / "transactions.csv"
 @st.cache_data
 def load_data():
-    return run_pipeline(file_path)
-df, bank = load_data()
+    with Session(engine) as session:
+        df = get_transactions_dataframe(session)
+
+    return prepare_analytics_data(df)
+
+df = load_data()
 # Filtering functionality
 filtered_df = df.copy()
 
@@ -72,7 +81,7 @@ if st.session_state.selected_category:
 
 # If date range was selected
 if len(st.session_state.date_range) == 2:
-    start_date, end_date = pd.to_datetime(st.session_state.date_range)
+    start_date, end_date = st.session_state.date_range
 
     filtered_df = filtered_df[(filtered_df["transaction_date"] >= start_date) & (filtered_df["transaction_date"] <= end_date)]
 # KPI CARDS

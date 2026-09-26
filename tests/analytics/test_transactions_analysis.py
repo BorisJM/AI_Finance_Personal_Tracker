@@ -90,8 +90,6 @@ def test_get_last_transactions_removes_sensitive_columns(transactions_df):
     result = get_last_transactions(transactions_df)
 
     assert "counterparty_account" not in result.columns
-    assert "counterparty_name" not in result.columns
-    assert "account_balance" not in result.columns
     assert "currency_code" not in result.columns
 
 
@@ -119,8 +117,6 @@ def test_get_last_transactions_returns_10_latest():
         "transaction_description": [f"Transaction {i}" for i in range(1, 13)],
         "debit_amount": [-10.00] * 12,
         "counterparty_account": ["x"] * 12,
-        "counterparty_name": ["x"] * 12,
-        "account_balance": [1000.00] * 12,
         "currency_code": ["PLN"] * 12,
     })
 

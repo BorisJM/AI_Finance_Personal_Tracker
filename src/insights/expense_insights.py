@@ -44,13 +44,11 @@ def expense_insights(df):
         .reset_index()
     )
 
-    category_monthly["percentage_diff"] = (
-        category_monthly
-        .sort_values("transaction_period")
-        .groupby("transaction_category")["expense_amount"]
-        .pct_change()
-        * 100
-    )
+    category_monthly = category_monthly.sort_values(["transaction_category", "transaction_period"])
+
+    previous_expense = (category_monthly.groupby("transaction_category")["expense_amount"].shift(1))
+
+    category_monthly["percentage_diff"] = ((category_monthly["expense_amount"] - previous_expense) / previous_expense.where(previous_expense != 0) * 100)
 
     valid_increases = category_monthly[
         category_monthly["percentage_diff"].notna()
@@ -115,8 +113,7 @@ def expense_insights(df):
         })
 
     # 5. MOST EXPENSIVE DAY OF THE WEEK
-
-    df["day_of_week"] = df["transaction_date"].dt.day_name()
+    df["day_of_week"] = pd.to_datetime(df["transaction_date"]).dt.day_name()
 
     spending_by_day = (
         df.groupby("day_of_week")["expense_amount"]

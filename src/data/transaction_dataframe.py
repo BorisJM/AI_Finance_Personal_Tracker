@@ -4,6 +4,35 @@ from sqlalchemy.orm import Session
 from database.models.transaction import Transaction
 from database.repositories.transaction_repository import TransactionRepository
 
+# Helper function to prepare data for analytics
+def prepare_analytics_data(df: pd.DataFrame) -> pd.DataFrame:
+    result = df.copy()
+
+    result["amount"] = result["amount"].astype(float)
+    result["debit_amount"] = result["amount"].where(
+        result["transaction_type"] == "EXPENSE",
+        0
+    )
+
+    result["credit_amount"] = result["amount"].where(
+        result["transaction_type"] == "INCOME",
+        0
+    )
+
+    result["transaction_category"] = result["category"]
+    result["transaction_description"] = result["cleaned_description"]
+
+    result["expense_amount"] = result["debit_amount"].abs()
+    result["income_amount"] = result["credit_amount"]
+
+    result["description"] = result["cleaned_description"]
+
+    result["transaction_period"] = (
+        pd.to_datetime(result["transaction_date"])
+        .dt.to_period("M")
+    )
+
+    return result
 
 def transaction_to_dataframe(transactions: list[Transaction]) -> pd.DataFrame:
     rows = []
