@@ -77,3 +77,22 @@ def test_largest_expense(transactions_df):
     )
 
     assert "300" in insight["message"]
+
+
+def test_spending_vs_income_with_zero_income():
+    df = pd.DataFrame({
+        "transaction_description": ["Biedronka"],
+        "transaction_category": ["Groceries"],
+        "debit_amount": [-100.00],
+        "credit_amount": [0.00],
+        "transaction_date": pd.to_datetime(["2026-02-05"]),
+    })
+
+    result = expense_insights(df)
+
+    insight = next(
+        x for x in result
+        if x["title"] == "Spending vs income"
+    )
+
+    assert "0%" in insight["message"]
