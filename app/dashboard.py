@@ -5,7 +5,6 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
-from src.insights.ai_insights import generate_ai_insights
 from app.render_ai_insights import render_ai_insights
 from app.render_income_expense_chart import render_income_expense_chart
 from app.render_atv import render_atv
@@ -26,10 +25,12 @@ st.set_page_config(
 # add page title
 st.title("💰 Personal Finance Dashboard")
 st.caption("Overview of your personal finances")
+# File path
+file_path = ROOT_DIR / "data" / "raw" / "transactions.csv"
 @st.cache_data
 def load_data():
-    return run_pipeline()
-df = load_data()
+    return run_pipeline(file_path)
+df, bank = load_data()
 # Filtering functionality
 filtered_df = df.copy()
 

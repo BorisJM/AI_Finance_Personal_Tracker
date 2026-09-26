@@ -1,6 +1,6 @@
 import datetime
 from decimal import Decimal
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select
 from database.models.enums import Currency
 from database.models.transaction import Transaction
@@ -45,11 +45,11 @@ class TransactionRepository:
         return new_transaction
 
     # 2. Get all transactions
-    def get_all(self, category_name: str | None = None, start_date: datetime.date | None = None, end_date: datetime.date | None = None, merchant_name: str | None = None, account_name: str | None = None,
+    def get_all(self, category_name: str | None = None, transaction_type: TransactionType | None = None, start_date: datetime.date | None = None, end_date: datetime.date | None = None, merchant_name: str | None = None, account_name: str | None = None,
                 counterparty_account: str | None = None, cleaned_description_text: str | None = None, min_amount: Decimal | None = None, max_amount: Decimal | None = None) -> list[Transaction]:
         # Create a base query that will be filtered
         # - Category filter
-        stmt = select(Transaction)
+        stmt = (select(Transaction).options(joinedload(Transaction.category), joinedload(Transaction.merchant), joinedload(Transaction.category)).order_by(Transaction.transaction_date.desc()))
         if category_name is not None:
             stmt = stmt.join(Transaction.category).where(
                 Category.name == category_name
@@ -86,19 +86,15 @@ class TransactionRepository:
         if min_amount is not None and max_amount is not None:
             if max_amount < min_amount:
                 raise ValueError("Maximum amount cannot be less than minimum amount")
+        # - Transaction type
+        if transaction_type is not None:
+            stmt = stmt.where(Transaction.transaction_type == transaction_type)
         found_transactions = self.session.execute(stmt).scalars().all()
         return found_transactions
 
     # 3. Get by ID transaction
     def get_by_id(self, transaction_id: int) -> Transaction | None:
-        transaction = self.session.get(Transaction, transaction_id)
-
-        if transaction is None:
-            print("Transaction not found")
-            return None
-        else:
-            return transaction
-
+        return self.session.get(Transaction, transaction_id)
     # 4. Update transaction
     def update(self, transaction_id, new_merchant_id: int | None = None, new_category_id: int | None = None, cleaned_description: str | None = None) -> Transaction | None:
         stmt = select(Transaction).where(Transaction.id == transaction_id)

@@ -4,27 +4,28 @@ from src.analytics.spending_analysis import calculate_monthly_expenses
 
 
 def render_monthly_chart(filtered_df):
-    monthly_expenses = calculate_monthly_expenses(filtered_df)
-    monthly_expenses["debit_amount"] = (monthly_expenses["debit_amount"].abs())
+    monthly_expenses = calculate_monthly_expenses(filtered_df).copy()
 
+    monthly_expenses["transaction_period"] = (monthly_expenses["transaction_period"].astype(str))
 
-    figMonthlyExpenses = px.bar(
+    fig_monthly_expenses = px.bar(
         monthly_expenses,
-        x="transaction_month",
-        y="debit_amount",
-        color="debit_amount",
+        x="transaction_period",
+        y="expense_amount",
+        color="expense_amount",
         text_auto=True,
-        color_discrete_sequence=px.colors.sequential.Reds
+        color_discrete_sequence=px.colors.sequential.Reds,
     )
 
-    figMonthlyExpenses.update_layout(
+    fig_monthly_expenses.update_layout(
         title="📊 Monthly Expenses",
         xaxis_title="Month",
         yaxis_title="Expenses",
         showlegend=False,
     )
 
-    figMonthlyExpenses.update_traces(
+    fig_monthly_expenses.update_traces(
         texttemplate="%{y:.2f} zł",
     )
-    return figMonthlyExpenses
+
+    return fig_monthly_expenses

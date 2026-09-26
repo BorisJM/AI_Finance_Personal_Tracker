@@ -9,7 +9,9 @@ def render_kpis(filtered_df):
     # Total expenses
     total_expenses = calculate_total_expenses(filtered_df)
     # Expenses growth rate
-    expenses_month_rate = calculate_monthly_expense_growth_rate(filtered_df)["trend_expense_percentage"]
+    expenses_month_rate = calculate_monthly_expense_growth_rate(
+        filtered_df
+    )["expense_growth_rate"]
     if len(expenses_month_rate) > 0:
         expenses_month_rate = expenses_month_rate.iloc[-1].round()
         if math.isnan(expenses_month_rate):
@@ -22,7 +24,7 @@ def render_kpis(filtered_df):
     # Total income
     total_income = calculate_total_income(filtered_df)
     # Income growth rate
-    income_month_rate = calculate_monthly_income_growth_rate(filtered_df)["month_growth_rate"]
+    income_month_rate = calculate_monthly_income_growth_rate(filtered_df)["income_growth_rate"]
     if len(income_month_rate) > 0:
         income_month_rate = income_month_rate.iloc[-1].round()
         if math.isnan(income_month_rate):
