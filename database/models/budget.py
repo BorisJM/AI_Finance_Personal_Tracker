@@ -1,7 +1,7 @@
 import datetime
 import decimal
 
-from sqlalchemy import String, Numeric, ForeignKey
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
 

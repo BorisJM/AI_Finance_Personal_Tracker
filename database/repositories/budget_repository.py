@@ -126,3 +126,10 @@ class BudgetRepository:
         else:
             self.session.delete(budget)
             return True
+
+    # 8. Get all budgets
+    def get_all(self) -> list[Budget]:
+        stmt = select(Budget).order_by(Budget.start_date.desc())
+        budgets = self.session.execute(stmt).scalars().all()
+
+        return budgets

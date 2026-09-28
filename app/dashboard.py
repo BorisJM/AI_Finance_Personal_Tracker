@@ -10,6 +10,7 @@ from app.render_income_expense_chart import render_income_expense_chart
 from app.render_atv import render_atv
 from app.render_category_chart import render_category_chart
 from app.render_kpis import render_kpis
+from app.render_budgets import render_budgets
 from app.render_monthly_chart import render_monthly_chart
 from app.render_tables import render_tables
 from sqlalchemy.orm import Session
@@ -86,6 +87,11 @@ if len(st.session_state.date_range) == 2:
     filtered_df = filtered_df[(filtered_df["transaction_date"] >= start_date) & (filtered_df["transaction_date"] <= end_date)]
 # KPI CARDS
 render_kpis(filtered_df)
+
+st.divider()
+
+with Session(engine) as session:
+    render_budgets(session)
 
 st.divider()
 

@@ -49,7 +49,7 @@ class TransactionRepository:
                 counterparty_account: str | None = None, cleaned_description_text: str | None = None, min_amount: Decimal | None = None, max_amount: Decimal | None = None) -> list[Transaction]:
         # Create a base query that will be filtered
         # - Category filter
-        stmt = (select(Transaction).options(joinedload(Transaction.category), joinedload(Transaction.merchant), joinedload(Transaction.category)).order_by(Transaction.transaction_date.desc()))
+        stmt = (select(Transaction).options(joinedload(Transaction.category), joinedload(Transaction.merchant), joinedload(Transaction.account)).order_by(Transaction.transaction_date.desc()))
         if category_name is not None:
             stmt = stmt.join(Transaction.category).where(
                 Category.name == category_name
