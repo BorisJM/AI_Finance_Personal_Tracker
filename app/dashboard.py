@@ -73,7 +73,7 @@ with st.sidebar:
     )
 
     # Reset filters button
-    st.button(label="Reset filters", use_container_width=True, on_click=reset_filters)
+    st.button(label="Reset filters", width="stretch", on_click=reset_filters)
 
 # If category was selected
 if st.session_state.selected_category:
@@ -99,7 +99,7 @@ figMonthlyExpenses = render_monthly_chart(filtered_df)
 st.plotly_chart(fig, width='stretch')
 
 # Display monthly expenses chart
-st.plotly_chart(figMonthlyExpenses, use_container_width=True)
+st.plotly_chart(figMonthlyExpenses, width="stretch")
 
 st.divider()
 

@@ -13,6 +13,8 @@ from src.data.transaction_dataframe import (
 )
 from src.analytics.spending_analysis import calculate_total_expenses, calculate_monthly_expenses
 from src.analytics.income_analysis import calculate_total_income, calculate_monthly_income
+from src.insights.ai_insights import generate_ai_insights
+
 
 def test_import_flow():
     engine = create_engine("sqlite:///:memory:")

@@ -1,5 +1,5 @@
 from data.load_data import load_transactions
-from src.classification.transcation_classification import classification
+from src.classification.transaction_classification import classification
 from src.cleaning.cleaning import data_cleaning
 from src.pipeline.identify_bank import identify_bank
 

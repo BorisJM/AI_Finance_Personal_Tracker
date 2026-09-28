@@ -5,13 +5,12 @@ from src.analytics.category_analysis import expenses_by_category, category_perce
 from src.analytics.income_analysis import calculate_total_income, calculate_monthly_income
 from src.analytics.spending_analysis import calculate_total_expenses, calculate_monthly_expenses, \
     calculate_biggest_expenses, calculate_average_monthly_expense, top_transactions
-from src.classification.transcation_classification import classification
+from src.classification.transaction_classification import classification
 from src.cleaning.cleaning import data_cleaning
 from src.pipeline.data_pipeline import run_pipeline
 
 # Run pipeline
 df = run_pipeline()
-print(df.head())
 # 3. Dashboard
 # -------- INCOMES --------
 # Calculate total income
