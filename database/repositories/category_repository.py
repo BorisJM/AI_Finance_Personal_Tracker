@@ -59,7 +59,7 @@ class CategoryRepository:
 
         return found_category
 
-     # 6. Delete category when - CONDITION 1: Not assigned to any Transactions, CONDITION 2: Not assigned to any Budget
+    # 6. Delete category when - CONDITION 1: Not assigned to any Transactions, CONDITION 2: Not assigned to any Budget
     def delete(self, category_id: int) -> bool:
         # Check if category exists
         # If no then return -> FALSE
@@ -85,3 +85,9 @@ class CategoryRepository:
         self.session.delete(category)
 
         return True
+
+    # 7. Get categories by names
+    def get_by_names(self, unique_categories: set[str]) -> list[Category]:
+        stmt = select(Category).where(Category.name.in_(unique_categories))
+        return self.session.execute(stmt).scalars().all()
+

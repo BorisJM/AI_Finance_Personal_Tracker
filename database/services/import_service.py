@@ -46,12 +46,12 @@ class ImportService:
                     currency=Currency(df["currency_code"].iloc[0]),
                     created_at=datetime.date.today()
                 )
-
+            # -------------- MERCHANTS --------------
             # 4. Create merchants
             # Unique merchants set
             unique_merchants = set()
             # We need to loop through every row to check if merchant exists if not then create a new one
-            for index, row in df.iterrows():
+            for _, row in df.iterrows():
                 description = row["transaction_description"]
                 counterparty_name = row["counterparty_name"]
                 normalized_name = normalize_merchant_name(description)
@@ -71,19 +71,24 @@ class ImportService:
                                                          normalized_name=normalized_name, location=location)
                     self.session.flush()
                     merchants_dict[(normalized_name, location)] = new_merchant
-
+            # -------------- CATEGORIES --------------
             # 5. Find/Create categories
+            unique_categories = set()
             # First we need to check if category exists
-            for index, row in df.iterrows():
+            for _, row in df.iterrows():
                 category_name = row["transaction_category"]
-                category = self.category_repo.get_by_name(category_name)
-                if category is None:
-                    category = CategoryType(category_name)
-                    category = self.category_repo.create(name=category_name, icon=category.icon, color=category.color)
-                    self.session.flush() # Necessary line, so we can insert category to database and immediately get access to CATEGORY ID
-                # Assign to every row category id it is related to
-                df.loc[index, "category_id"] = category.id
-
+                unique_categories.add(category_name)
+            # Get all categories that are created in database already
+            existing_categories_db = self.category_repo.get_by_names(unique_categories=unique_categories)
+            categories_dict = {}
+            for category_db in existing_categories_db:
+                categories_dict[category_db.name] = category_db
+            for category_name in unique_categories:
+                if categories_dict.get(category_name) is None:
+                    new_category = CategoryType(category_name)
+                    new_category = self.category_repo.create(name=category_name, icon=new_category.icon, color=new_category.color)
+                    self.session.flush()
+                    categories_dict[category_name] = new_category
 
             # 6. Create Transactions
             for _, row in df.iterrows():
@@ -98,17 +103,18 @@ class ImportService:
                 counterparty_name = row["counterparty_name"]
                 normalized_name = normalize_merchant_name(cleaned_description)
                 location = extract_location(cleaned_description, counterparty_name)
-                merchant_id = merchants_dict.get((normalized_name, location)).id
+                merchant = merchants_dict.get((normalized_name, location))
                 transaction_type = TransactionType("INCOME" if row["credit_amount"] > 0 else "EXPENSE")
-                transaction_merchant_id = merchant_id
-                transaction_category_id = row["category_id"]
+                category = categories_dict.get(row["transaction_category"])
                 counterparty_account = row['counterparty_account']
                 # Check if merchant_id exists
-                if transaction_merchant_id is None:
-                    raise ValueError(f"Merchant ID is None for transaction: {transaction_identifier}")
+                if merchant is None:
+                    raise ValueError(f"Merchant is None for transaction: {transaction_identifier}")
                 # Check if category_id exists
-                if transaction_category_id is None:
-                    raise ValueError(f"Category ID is None for transaction: {transaction_identifier}")
+                if category is None:
+                    raise ValueError(f"Category is None for transaction: {transaction_identifier}")
+                transaction_merchant_id = merchant.id
+                transaction_category_id = category.id
                 # If not then create transaction
                 if transaction is None:
                     transaction = self.transaction_repo.create(currency=Currency(currency), transaction_date=transaction_date, amount=amount, merchant_id=transaction_merchant_id, original_description=original_description,
@@ -116,3 +122,5 @@ class ImportService:
                                           source_file_id=new_import.id, counterparty_account=counterparty_account, transaction_identifier=transaction_identifier)
             # 7. Final step update IMPORT status and rows count
             self.import_repo.update(import_id=new_import.id, import_status=Status.SUCCESS, rows_count=len(df))
+
+
