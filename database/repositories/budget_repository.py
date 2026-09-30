@@ -16,6 +16,7 @@ from database.models.category import Category
 # 6. Get by category name
 # 7. Delete budget
 
+_UNSET = object()
 
 class BudgetRepository:
     def __init__(self, session: Session):
@@ -38,7 +39,7 @@ class BudgetRepository:
 
 
     # 2. Update budget
-    def update_budget(self, budget_id: int, monthly_limit: Decimal | None = None, start_date: datetime.date | None = None, end_date: datetime.date | None = None, category_id: int | None = None) -> Budget | None:
+    def update_budget(self, budget_id: int, monthly_limit: Decimal | None = None, start_date: datetime.date | None = None, end_date: datetime.date | None = None, category_id: int | None = _UNSET) -> Budget | None:
         updated_budget = self.session.get(Budget, budget_id)
         # No budget return None
         if updated_budget is None:
@@ -62,8 +63,13 @@ class BudgetRepository:
         updated_budget.start_date = new_start_date
         updated_budget.end_date = new_end_date
 
-        if category_id is not None:
+        if category_id is _UNSET:
+            pass
+        elif category_id is None:
+            updated_budget.category_id = None
+        else:
             updated_budget.category_id = category_id
+
 
         return updated_budget
 

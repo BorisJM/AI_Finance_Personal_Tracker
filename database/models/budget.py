@@ -16,5 +16,5 @@ class Budget(Base):
     start_date: Mapped[datetime.date] = mapped_column(nullable=False)
     end_date: Mapped[datetime.date] = mapped_column(nullable=False)
     # Budget -> Category relationship many-to-one
-    category_id: Mapped[int] = mapped_column(ForeignKey("category.id"))
+    category_id: Mapped[int | None] = mapped_column(ForeignKey("category.id"), nullable=True)
     category: Mapped["Category"] = relationship("Category", back_populates="budgets")

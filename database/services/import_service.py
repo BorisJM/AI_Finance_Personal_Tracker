@@ -11,7 +11,6 @@ from database.models.enums import Status, CategoryType
 from database.models.enums import TransactionType
 from src.classification.detect_merchant import normalize_merchant_name
 from src.classification.extract_location import extract_location
-from src.pipeline.identify_bank import identify_bank
 from src.pipeline.data_pipeline import run_pipeline
 
 
@@ -49,18 +48,29 @@ class ImportService:
                 )
 
             # 4. Create merchants
+            # Unique merchants set
+            unique_merchants = set()
             # We need to loop through every row to check if merchant exists if not then create a new one
             for index, row in df.iterrows():
                 description = row["transaction_description"]
                 counterparty_name = row["counterparty_name"]
                 normalized_name = normalize_merchant_name(description)
                 location = extract_location(description, counterparty_name)
-                merchant = self.merchant_repo.get_by_normalized_name_and_location(normalized_name=normalized_name, location=location)
-                if merchant is None:
-                    merchant = self.merchant_repo.create(name=f"{normalized_name} - {location}", normalized_name=normalized_name, location=location)
-                    self.session.flush() # Necessary line, so we can insert category to database and immediately get access to Merchant ID
-                # Assign to every row merchant id it is related to
-                df.loc[index, "merchant_id"] = merchant.id
+                unique_merchant = (normalized_name, location)
+                unique_merchants.add(unique_merchant)
+            existing_merchants_db = self.merchant_repo.get_by_keys(unique_merchants=unique_merchants)
+            merchants_dict = {}
+            for merchant_db in existing_merchants_db:
+                merchants_dict[(merchant_db.normalized_name, merchant_db.location)] = merchant_db
+            # Check unique merchants, if merchants_dict doesn't have merchant then we create it and add to the dictionary
+            for unique_merchant in unique_merchants:
+                normalized_name = unique_merchant[0]
+                location = unique_merchant[1]
+                if merchants_dict.get((normalized_name, location)) is None:
+                    new_merchant = self.merchant_repo.create(name=f"{normalized_name} - {location}",
+                                                         normalized_name=normalized_name, location=location)
+                    self.session.flush()
+                    merchants_dict[(normalized_name, location)] = new_merchant
 
             # 5. Find/Create categories
             # First we need to check if category exists
@@ -83,11 +93,15 @@ class ImportService:
                 transaction = self.transaction_repo.get_by_identifier(transaction_identifier)
                 currency = row["currency_code"]
                 amount = row["debit_amount"] if row["debit_amount"] < 0 else row["credit_amount"]
-                transaction_merchant_id = row["merchant_id"]
-                transaction_category_id = row["category_id"]
                 original_description = row["transaction_original_description"]
                 cleaned_description = row["transaction_description"]
+                counterparty_name = row["counterparty_name"]
+                normalized_name = normalize_merchant_name(cleaned_description)
+                location = extract_location(cleaned_description, counterparty_name)
+                merchant_id = merchants_dict.get((normalized_name, location)).id
                 transaction_type = TransactionType("INCOME" if row["credit_amount"] > 0 else "EXPENSE")
+                transaction_merchant_id = merchant_id
+                transaction_category_id = row["category_id"]
                 counterparty_account = row['counterparty_account']
                 # Check if merchant_id exists
                 if transaction_merchant_id is None:

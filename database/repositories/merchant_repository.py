@@ -1,6 +1,8 @@
 from sqlalchemy import select, and_, update
 from sqlalchemy.orm import Session
+from sqlalchemy import tuple_
 from database.models.merchant import Merchant
+
 
 # ----------- BUSINESS LOGIC -----------
 # 1. Create merchant
@@ -60,3 +62,8 @@ class MerchantRepository:
         if location is not None:
             found_merchant.location = location
         return found_merchant
+
+    # 7. Get by keys
+    def get_by_keys(self, unique_merchants: list) -> list[Merchant]:
+        stmt = select(Merchant).where(tuple_(Merchant.normalized_name, Merchant.location).in_(unique_merchants))
+        return self.session.execute(stmt).scalars().all()

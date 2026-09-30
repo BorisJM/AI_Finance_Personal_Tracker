@@ -56,7 +56,7 @@ class BudgetService:
 
         # If budget has category
         if budget.category_id is not None:
-            transactions = [transactions for transactions in transactions if transactions.category_id == budget.category_id]
+            transactions = [transaction for transaction in transactions if transaction.category_id == budget.category_id]
 
 
         total_spent = sum((abs(transaction.amount) for transaction in transactions), Decimal("0"))
@@ -75,3 +75,17 @@ class BudgetService:
     # 8. Get all categories
     def get_categories(self):
         return self.category_repo.get_all()
+
+    # 9. Update budget
+    def update_budget(self, budget_id: int, monthly_limit: Decimal | None = None, start_date: datetime.date | None = None, end_date: datetime.date | None = None, category_id: int | None = None):
+        updated_budget = self.budget_repo.update_budget(
+            budget_id=budget_id,
+            monthly_limit=monthly_limit,
+            start_date=start_date,
+            end_date=end_date,
+            category_id=category_id
+        )
+        if updated_budget is None:
+            return None
+        self.session.commit()
+        return updated_budget

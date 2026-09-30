@@ -1,5 +1,5 @@
 import streamlit as st
-
+from decimal import Decimal
 from database.services.budget_service import BudgetService
 
 
@@ -13,7 +13,7 @@ def render_budgets(session):
         categories = budget_service.get_categories()
 
         category_options = {
-            "All expenses": None,
+            "All expenses": 0,
             **{category.name: category.id for category in categories},
         }
 
@@ -72,7 +72,60 @@ def render_budgets(session):
         limit = status["budget"].monthly_limit
         remaining = status["remaining"]
         percentage_used = status["spent_percentage"]
+        with st.expander("Edit budget"):
+            edit_category_options = category_options
+            edit_category_options = list(edit_category_options.keys())
+            default_category_index =edit_category_options.index(category_name)
+            # Selected edit category
+            edit_category = st.selectbox(
+                "Change category",
+                options=edit_category_options,
+                key=f"edit_category_{budget.id}",
+                index=default_category_index,
+            )
+            print(edit_category)
+            edit_category_id = category_options[edit_category]
+            print(budget.id)
+            print(edit_category_id)
+            edit_limit = st.number_input(
+                "Monthly limit",
+                min_value=0.01,
+                value=float(budget.monthly_limit),
+                step=50.00,
+                key=f"edit_limit_{budget.id}",
+            )
 
+            edit_start_date = st.date_input(
+                "Start date",
+                value=budget.start_date,
+                key=f"edit_start_{budget.id}",
+            )
+
+            edit_end_date = st.date_input(
+                "End date",
+                value=budget.end_date,
+                key=f"edit_end_{budget.id}",
+            )
+
+            if st.button(
+                    "Save changes",
+                    key=f"save_budget_{budget.id}",
+                    width="stretch",
+            ):
+                try:
+                    budget_service.update_budget(
+                        budget_id=budget.id,
+                        monthly_limit=Decimal(str(edit_limit)),
+                        start_date=edit_start_date,
+                        end_date=edit_end_date,
+                        category_id=edit_category_id
+                    )
+
+                    st.success("Budget updated successfully.")
+                    st.rerun()
+
+                except ValueError as error:
+                    st.error(str(error))
         st.subheader(category_name)
 
         col1, col2, col3 = st.columns(3)
