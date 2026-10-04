@@ -117,3 +117,8 @@ class TransactionRepository:
     # 5. Get transaction by identifier
     def get_by_identifier(self, transaction_identifier: str) -> Transaction | None:
         return self.session.execute(select(Transaction).where(Transaction.transaction_identifier == transaction_identifier)).scalar_one_or_none()
+
+    # 6 Get by identifiers
+    def get_by_identifiers(self, transaction_identifiers: list[str]) -> list[Transaction]:
+        stmt = select(Transaction).where(Transaction.transaction_identifier.in_(transaction_identifiers))
+        return self.session.execute(stmt).scalars().all()
