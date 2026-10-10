@@ -1,5 +1,8 @@
 import pandas as pd
 from pathlib import Path
+
+from sqlalchemy.orm import session, Session
+from database.engine import engine
 from src.analytics.category_analysis import expenses_by_category, category_percentages, category_percentage_per_month, \
     top_categories
 from src.analytics.income_analysis import calculate_total_income, calculate_monthly_income
@@ -7,7 +10,7 @@ from src.analytics.spending_analysis import calculate_total_expenses, calculate_
     calculate_biggest_expenses, calculate_average_monthly_expense, top_transactions
 from src.classification.transaction_classification import classification
 from src.cleaning.cleaning import data_cleaning
-from src.machine_learning.category_classification import prepare_data_for_classification_ml
+from src.machine_learning.category_classification import CategoryClassificationService
 from src.pipeline.data_pipeline import run_pipeline
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,4 +44,6 @@ calculate_average_monthly_expense(df)
 # Calculate top transactions
 top_transactions(df)
 # Category classification machine learning
-prepare_data_for_classification_ml(df)
+with Session(engine) as session:
+    CategoryClassification = CategoryClassificationService(session=session)
+    CategoryClassification.prepare_data_for_classification_ml(df)
