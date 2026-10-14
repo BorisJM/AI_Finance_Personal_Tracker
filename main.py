@@ -1,17 +1,19 @@
-import pandas as pd
 from pathlib import Path
 from src.analytics.category_analysis import expenses_by_category, category_percentages, category_percentage_per_month, \
     top_categories
 from src.analytics.income_analysis import calculate_total_income, calculate_monthly_income
 from src.analytics.spending_analysis import calculate_total_expenses, calculate_monthly_expenses, \
     calculate_biggest_expenses, calculate_average_monthly_expense, top_transactions
-from src.classification.transaction_classification import classification
-from src.cleaning.cleaning import data_cleaning
+
 from src.machine_learning.category_classification import prepare_data_for_classification_ml
 from src.pipeline.data_pipeline import run_pipeline
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 file_path = BASE_DIR / "data" / "raw" / "transactions.csv"
+
+csv_path = Path(
+    r"C:\Users\hp\PycharmProjects\AI_Finance_Personal_Tracker\data\raw\transactions.csv"
+)
 
 # Run pipeline
 df, bank = run_pipeline(r"C:\Users\hp\PycharmProjects\AI_Finance_Personal_Tracker\data\raw\transactions.csv")

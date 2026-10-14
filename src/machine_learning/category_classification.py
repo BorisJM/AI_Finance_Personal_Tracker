@@ -6,6 +6,8 @@ from sklearn.metrics import accuracy_score, classification_report
 
 
 def prepare_data_for_classification_ml(df):
+    print("\n--- KATEGORIE PRZED FILTROWANIEM ---")
+    print(df["transaction_category"].value_counts(dropna=False))
     # Transactions count in each category
     transactions_count_category = df.groupby("transaction_category")
     # Min 5
