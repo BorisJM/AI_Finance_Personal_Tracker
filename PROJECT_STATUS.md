@@ -1,365 +1,191 @@
-# AI Personal Finance Analyzer --- Project Status
-
-> Current development snapshot\
-> Last updated: September 2026
-
-## Overview
-
-AI Personal Finance Analyzer is a personal finance intelligence system
-designed to go beyond traditional budget tracking.
-
-The goal is to transform raw bank transaction data into structured
-information, financial analytics and actionable insights that help
-understand spending behavior and make better financial decisions.
-
-The project is currently in the **MVP / foundation stage**. The core
-data flow is working, while the backend, dashboard and analytics are
-still being actively developed and refined.
-
-------------------------------------------------------------------------
-
-## Current Data Flow
-
-``` text
-Bank CSV
-   ↓
-Data Import
-   ↓
-Preprocessing & Cleaning
-   ↓
-Merchant Identification
-   ↓
-Transaction Classification
-   ↓
-SQLite Database
-   ↓
-Analytics
-   ↓
-Financial Insights
-   ↓
-Streamlit Dashboard
-```
-
-------------------------------------------------------------------------
-
-## Implemented
-
-### 1. Data Import
-
--   Bank transaction CSV import
--   Automatic bank identification
--   Data validation and normalization
--   Support for multiple imported files
--   Import tracking
-
-### 2. Data Cleaning & Preprocessing
-
--   Column normalization
--   Data type conversion
--   Date handling
--   Transaction description cleaning
--   Regex-based text cleaning
--   Lowercase normalization
--   Removal of unnecessary characters and numbers
--   Stopword handling
--   Edge-case handling
-
-Example:
-
-``` text
-BIEDRONKA 4432 RADOM
-        ↓
-biedronka
-```
-
-### 3. Transaction Classification
-
-The current classification system is rule-based.
-
-Implemented:
-
--   Merchant identification
--   Merchant normalization
--   Merchant aliases
--   Category assignment
--   Income vs. expense separation
--   Dictionary-based classification rules
-
-Current categories include:
-
--   Income
--   Groceries
--   Food
--   Transport
--   Housing
--   Entertainment
--   Health & Fitness
--   Shopping
--   Travel
--   Subscriptions
--   Financial
--   Car
--   Other
-
-### 4. Database
-
-The project uses:
-
--   SQLite
--   SQLAlchemy
-
-Main entities:
-
--   Transaction
--   Account
--   Category
--   Merchant
--   Import / Source File
--   Budget
-
-The database layer also contains:
-
--   SQLAlchemy models
--   Relationships
--   Repository Pattern
--   Import service
--   Database session management
--   Business rules and validation
-
-### 5. Analytics
-
-Implemented analytics include:
+# AI Finance Personal Tracker — Project Status
 
--   Total expenses
--   Total income
--   Monthly expenses
--   Monthly income
--   Expenses by category
--   Category percentages
--   Category percentages by month
--   Top categories
--   Largest expenses
--   Top transactions
--   Average monthly expenses
--   Savings
--   Savings rate
--   Spending trends
-
-### 6. Financial Insights
+> Last reviewed: October 21, 2026  
+> Repository: \`BorisJM/AI_Finance_Personal_Tracker\`  
+> Scope: reviewed public \`main\` branch  
+> Status: Work in progress
 
-The project contains a dedicated insights layer for generating automated
-observations.
-
-Current areas include:
-
--   Expense insights
--   Income insights
--   Savings insights
--   Trend insights
--   Waste / potential money leak insights
--   Combined AI insight presentation layer
+## 1. Product Vision
 
-The current insights are primarily based on rules and statistical
-analysis rather than machine learning.
+AI Finance Personal Tracker aims to become a Personal Finance Intelligence System.
 
-### 7. Dashboard
+The application is intended to help users:
+- Understand their financial behavior.
+- Automatically classify transactions.
+- Identify unnecessary spending and potential waste.
+- Discover spending patterns and trends.
+- Generate useful financial insights.
+- Evaluate alternative uses of money.
+- Eventually use ML/NLP, forecasting, anomaly detection, and personalized recommendations.
 
-The application uses Streamlit.
+The long-term vision is described in the project Master Plan. The features listed below distinguish existing code from planned or unverified functionality.
 
-Current dashboard functionality includes:
+## 2. Current Technical Structure
 
--   Financial KPIs
--   Total income
--   Total expenses
--   Savings
--   Savings rate
--   Transaction count
--   Expense breakdown by category
--   Monthly income vs. expenses
--   Spending trends
--   Average transaction value
--   Top expenses
--   Recent transactions
--   Financial insights
--   Date filtering
--   Category filtering
--   Interactive Plotly visualizations
+The repository contains components for data loading and cleaning, rule-based classification, a processing pipeline, SQLite and SQLAlchemy persistence, financial analytics, insights, a dashboard, and ML experiments.
 
-------------------------------------------------------------------------
+The intended flow is:
 
-## Architecture
+Bank CSV → Load and clean → Identify bank and classify transactions → Persist in SQLite → Analyze financial data → Generate insights → Display results in the dashboard.
 
-The project is structured into separate layers:
+In the reviewed version, \`src/pipeline/data_pipeline.py\` calls the rule-based classification function. The ML experiment is not yet confirmed as the production classifier used by the import pipeline.
 
-``` text
-app/
-    Dashboard and UI rendering
+## 3. Existing Components
 
-src/
-    cleaning/
-    classification/
-    analytics/
-    insights/
-    pipeline/
+The following components are present in the reviewed repository. Their presence does not guarantee that the full application currently starts or passes tests.
 
-database/
-    models/
-    repositories/
-    services/
+### 3.1 Data import and cleaning
 
-data/
-    raw/
-    processed/
-    dictionaries/
-```
+- Bank CSV loading.
+- Bank identification.
+- Transaction cleaning and description normalization.
+- Rule-based transaction classification.
+- A shared processing pipeline.
 
-The architecture is being developed with separation of responsibilities
-in mind, rather than keeping all logic inside the dashboard or a single
-script.
+Relevant areas: \`data/\`, \`src/cleaning/\`, \`src/classification/\`, and \`src/pipeline/\`.
 
-------------------------------------------------------------------------
+### 3.2 Database and persistence
 
-## Current Development Focus
+- SQLite database configuration.
+- SQLAlchemy models for transactions, accounts, categories, merchants, imports, and budgets.
+- Repository classes for database access.
+- An import service that creates or retrieves related records.
+- Transaction identifiers and duplicate checks.
+- Import status and row-count tracking.
 
-The project is **not finished**.
+Relevant areas: \`database/models/\`, \`database/repositories/\`, and \`database/services/\`.
 
-The current priority is to strengthen the foundation before moving into
-advanced Machine Learning features.
+### 3.3 Financial analytics
 
-### Backend & Services
+Existing analytics modules include calculations for:
+- Total and monthly income.
+- Total and monthly expenses.
+- Expenses by category.
+- Category percentages and monthly category percentages.
+- Top spending categories.
+- Largest expenses and top transactions.
+- Average monthly expenses.
 
--   Complete and improve the service layer
--   Improve interactions between pipeline, database and application
-    layers
--   Add missing validation and edge-case handling
--   Improve error handling
+Relevant area: \`src/analytics/\`.
 
-### Architecture & Code Quality
+### 3.4 Insights and dashboard
 
--   Refactor existing code where necessary
--   Improve separation of responsibilities
--   Reduce duplicated logic
--   Improve maintainability
--   Add tests
--   Improve project documentation
+- Insight-related modules exist under \`src/insights/\`.
+- Streamlit dashboard components exist under \`app/\`.
+- The repository includes UI components for financial metrics, categories, transactions, trends, and insights.
 
-### Dashboard
+End-to-end runtime behavior and consistency between displayed metrics and calculations still need verification.
 
--   Improve existing dashboard components
--   Add and refine visualizations
--   Improve filtering and user experience
--   Add additional analytics and insights
+## 4. Machine Learning Status
 
-### Analytics & Insights
+### Work already present
 
--   Extend financial behavior analysis
--   Improve trend detection
--   Improve waste detection
--   Add more meaningful financial insights
+\`src/machine_learning/category_classification.py\` contains an ML classification experiment using:
+- TF-IDF text features.
+- Logistic Regression.
+- Stratified K-fold cross-validation.
+- Accuracy and macro F1.
+- Classification reports.
+- Work toward identifying uncertain predictions for manual review.
 
-------------------------------------------------------------------------
+### Current limitations
 
-## Planned Advanced Features
+The reviewed file contains Git merge-conflict markers and competing implementations. The experiment should not be treated as a coherent, production-ready classifier until this is resolved.
 
-Once the current foundation is stable, the project will gradually move
-towards Machine Learning and NLP.
+The production pipeline still uses rule-based classification. The following remain to be verified or completed:
+- A reproducible training and evaluation workflow.
+- Reliable metrics for each category.
+- Evaluation against a rule-based baseline.
+- Leakage-resistant validation.
+- A measured threshold for manual review.
+- Model and vectorizer persistence, if required.
+- Integration into the import flow.
+- Handling of unknown categories and user corrections.
 
-### Machine Learning & NLP
+Previous experimental metrics should not be treated as production performance without a reproducible evaluation.
 
--   TF-IDF for transaction descriptions
--   Logistic Regression for transaction classification
--   ML-based merchant/category prediction
--   NLP-based transaction understanding
+## 5. Blockers and Risks
 
-### Advanced Analytics
+### Critical — Code consistency
 
--   Anomaly detection
--   Spending forecasting
--   Overspending risk detection
--   More advanced behavioral analysis
+The reviewed versions of \`main.py\` and \`src/machine_learning/category_classification.py\` contain merge-conflict markers.
 
-### Smart Recommendations
+Both files need to be reconciled before the affected execution paths can be considered reliable.
 
--   Personalized saving recommendations
--   Spending optimization suggestions
--   Opportunity cost analysis
--   Investment scenario simulations
+### High — Reproducibility
 
-------------------------------------------------------------------------
+- \`main.py\` includes a machine-specific Windows path to a CSV file.
+- \`requirements.txt\` appears incomplete relative to imports in the code.
+- Installation, initialization, and application startup need to be verified in a clean environment.
 
-## Technology Stack
+### High — Financial data privacy
 
-### Core
+Database/data artifacts, including \`database.db\` and \`test.parquet\`, are visible in the reviewed repository snapshot.
 
--   Python
--   Pandas
--   NumPy
+Their contents and intended role should be checked before deciding whether they belong in version control. \`.gitignore\` does not remove already tracked files or erase their history.
 
-### Database
+### High — Import reliability
 
--   SQLite
--   SQLAlchemy
+Verify:
+- Input validation and malformed-file handling.
+- Duplicate-import behavior.
+- Database rollback on failures.
+- Transaction, merchant, account, category, and import relationships.
+- Consistency of import status and row counts.
 
-### Dashboard & Visualization
+### Medium — Automated tests
 
--   Streamlit
--   Plotly
--   Matplotlib
+Review the existing test suite and add coverage for core pipeline behavior, import integrity, database rules, and financial calculations.
 
-### Machine Learning
+Do not claim tests pass unless they have actually been run.
 
--   scikit-learn
--   XGBoost (planned)
+## 6. Product Version Status
 
-### Development
+### V1 — MVP
 
--   Git
--   GitHub
--   VS Code
--   Jupyter Notebook
+**Partially implemented; end-to-end status requires verification.**
 
-------------------------------------------------------------------------
+Code exists for import, cleaning, rule-based classification, analytics, insight logic, and dashboard components.
 
-## Project Philosophy
+The remaining work is to resolve repository blockers, verify end-to-end behavior, and confirm that the required MVP flows work reliably.
 
-The project is being developed incrementally.
+### V2 — Advanced Analytics
 
-The goal is not to add Machine Learning as quickly as possible, but to
-first build a reliable foundation:
+**Partially implemented / needs feature-level audit.**
 
-**Clean data → solid architecture → reliable analytics → meaningful
-insights → Machine Learning**
+Some analytics and insight components exist. Financial Discipline Score, Opportunity Cost Analysis, and the full planned trend-analysis scope need explicit verification against the Master Plan.
 
-The project is also being used as a practical way to develop Data
-Science and software engineering skills through building, debugging,
-refactoring and continuously improving a real application.
+### V3 — Machine Learning & NLP
 
-------------------------------------------------------------------------
+**Experimental; not confirmed as integrated production functionality.**
 
-## Long-Term Vision
+An ML classification experiment exists, but its implementation needs conflict resolution, reliable evaluation, and a deliberate integration decision. Predictions, anomaly detection, and forecasting require separate validation.
 
-The final goal is to create a **Personal Finance Intelligence System**
-that can answer more than:
+### V4 — Smart Recommendation System
 
-> "How much did I spend?"
+**Long-term planned scope.**
 
-It should eventually help answer:
+Personalized saving recommendations and external data integrations should follow reliable core analytics and validated model behavior.
 
-> "Why am I spending this way, what patterns can be identified, where
-> can I improve, and what could happen if I changed my behavior?"
+## 7. Immediate Priorities
 
-------------------------------------------------------------------------
+1. Resolve merge conflicts without losing required behavior.
+2. Audit tracked data and database artifacts for privacy.
+3. Verify dependencies, paths, database initialization, and application startup.
+4. Test CSV import, duplicate handling, and database consistency.
+5. Establish a small regression test suite.
+6. Complete ML evaluation and compare against rule-based classification.
+7. Integrate ML only when its behavior is measurable and sufficiently reliable.
+8. Audit V2 features and proceed toward V3 and V4 incrementally.
 
-## Status
+See \`docs/ROADMAP.md\` for task-level scope and acceptance criteria.
 
-**Current stage:** MVP / Foundation + Analytics + Dashboard
+## 8. Development Principles
 
-**Completed:** Core data pipeline, cleaning, rule-based classification,
-database layer, analytics, insights and initial dashboard
-
-**In progress:** Backend/service layer, architecture improvements,
-validation, dashboard improvements, analytics and insights
-
-**Next major stage:** Machine Learning & NLP
-
-**Overall status:** 🚧 Work in progress
+- Build iteratively rather than implementing every feature at once.
+- Keep production code separate from experiments until integration is justified.
+- Prefer understandable solutions and measurable results.
+- Preserve financial data privacy.
+- Use tests to protect business rules and data integrity.
+- Learn through implementation, debugging, and code review.
+- Update this document when meaningful progress is verified.
