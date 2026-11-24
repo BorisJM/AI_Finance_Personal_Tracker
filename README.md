@@ -34,3 +34,12 @@ The project is currently under active development.
 - Personalized recommendations
 
 📌 **[See detailed project status →](PROJECT_STATUS.md)**
+
+## Local database
+
+The SQLite database (`database.db`) is **not** stored in Git, because it contains private financial data.
+After cloning, create an empty database:
+
+```bash
+python -m database.init_db
+```

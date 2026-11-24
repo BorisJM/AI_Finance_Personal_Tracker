@@ -3,3 +3,5 @@ bank_exports/
 __pycache__/
 .ipynb_checkpoints/
 .env
+# Local SQLite databases (contain private financial data)
+*.db
