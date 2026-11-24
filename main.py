@@ -1,57 +1,56 @@
+
 from pathlib import Path
 
-from sqlalchemy.orm import session, Session
-from database.engine import engine
-from src.analytics.category_analysis import expenses_by_category, category_percentages, category_percentage_per_month, \
-    top_categories
-from src.analytics.income_analysis import calculate_total_income, calculate_monthly_income
-from src.analytics.spending_analysis import calculate_total_expenses, calculate_monthly_expenses, \
-    calculate_biggest_expenses, calculate_average_monthly_expense, top_transactions
-<<<<<<< HEAD
-
-from src.machine_learning.category_classification import prepare_data_for_classification_ml
-=======
-from src.classification.transaction_classification import classification
-from src.cleaning.cleaning import data_cleaning
-from src.machine_learning.category_classification import CategoryClassificationService
->>>>>>> cf825d31e952adcbd93d9708739c797d53afa028
+from src.analytics.category_analysis import (
+    expenses_by_category,
+    category_percentages,
+    category_percentage_per_month,
+    top_categories,
+)
+from src.analytics.income_analysis import (
+    calculate_total_income,
+    calculate_monthly_income,
+)
+from src.analytics.spending_analysis import (
+    calculate_total_expenses,
+    calculate_monthly_expenses,
+    calculate_biggest_expenses,
+    calculate_average_monthly_expense,
+    top_transactions,
+)
+from src.machine_learning.category_classification import (
+    prepare_data_for_classification_ml,
+)
 from src.pipeline.data_pipeline import run_pipeline
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-file_path = BASE_DIR / "data" / "raw" / "transactions.csv"
 
-csv_path = Path(
-    r"C:\Users\hp\PycharmProjects\AI_Finance_Personal_Tracker\data\raw\transactions.csv"
-)
+# Project paths
+BASE_DIR = Path(__file__).resolve().parent
+csv_path = BASE_DIR / "data" / "raw" / "transactions.csv"
 
-# Run pipeline
-df, bank = run_pipeline(r"C:\Users\hp\PycharmProjects\AI_Finance_Personal_Tracker\data\raw\transactions.csv")
-# 3. Dashboard
-# -------- INCOMES --------
-# Calculate total income
+
+# 1. Load, clean and classify transactions
+df, bank = run_pipeline(csv_path)
+
+print(f"Detected bank: {bank}")
+
+
+# 2. Income analytics
 calculate_total_income(df)
-# Calculate monthly income
 calculate_monthly_income(df)
-# -------- EXPENSES --------
-# Calculate total expenses
+
+
+# 3. Expense analytics
 calculate_total_expenses(df)
-# Calculate expenses per month
 calculate_monthly_expenses(df)
-# Calculate expenses per category
 expenses_by_category(df)
-# Calculate top 10 expenses
 calculate_biggest_expenses(df)
-# Calculate what percentage every category takes
 category_percentages(df)
-# Calculate category percentage per month
 category_percentage_per_month(df)
-# Calculate Top categories
 top_categories(df)
-# Calculate average monthly expense
 calculate_average_monthly_expense(df)
-# Calculate top transactions
 top_transactions(df)
-# Category classification machine learning
-with Session(engine) as session:
-    CategoryClassification = CategoryClassificationService(session=session)
-    CategoryClassification.prepare_data_for_classification_ml(df)
+
+
+# 4. Machine learning experiment
+prepare_data_for_classification_ml(df)

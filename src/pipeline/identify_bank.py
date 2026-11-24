@@ -1,8 +1,7 @@
-import json
+from src.utils.paths import load_dictionary
 
 # Import Polish banks JSON
-with open("data/dictionaries/polish_banks.json", "r") as file:
-    polish_bank_dictionary = json.load(file)
+polish_bank_dictionary = load_dictionary("polish_banks.json")
 
 
 def identify_bank(account_number: str) -> str:

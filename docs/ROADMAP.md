@@ -22,15 +22,17 @@
 
 ### Tasks
 
-- [ ] Inspect and resolve merge-conflict markers in \`main.py\`.
-- [ ] Inspect and resolve merge-conflict markers in \`src/machine_learning/category_classification.py\`.
+- [x] Inspect and resolve merge-conflict markers in \`main.py\`.
+- [x] Inspect and resolve merge-conflict markers in \`src/machine_learning/category_classification.py\`.
 - [ ] Review both sides of each conflict and preserve required behavior.
 - [ ] Inspect repository status and preserve unrelated changes.
 - [ ] Check whether tracked database and data artifacts contain private information.
 - [ ] Decide which generated or local data artifacts belong in version control.
 - [ ] Audit \`.gitignore\` and already tracked files.
-- [ ] Verify dependency declarations and application entry points.
-- [ ] Replace machine-specific absolute paths with configurable paths.
+- [x] Verify dependency declarations (\`requirements.txt\` pinned to the working \`.venv\`, Nov 2026).
+- [x] Replace machine-specific absolute paths; dictionary JSON files load via \`src/utils/paths.py\`.
+- [x] Run tests on synthetic data (\`tests/fixtures/millennium_sample.csv\`) instead of the private bank export.
+- [x] Speed up \`extract_location\` (dictionary lookup instead of ~57k regexes per row; same results).
 
 ### Acceptance criteria
 
@@ -163,11 +165,12 @@ V1 is complete when the main import-to-dashboard workflow is reliable, core anal
 
 ## V2.2 — Financial Discipline Score
 
-- [ ] Define the score on a 0–100 scale.
-- [ ] Define measurable factors: spending regularity, impulsivity indicators, saving behavior, spending stability, and potential waste.
-- [ ] Establish how each factor contributes to the score.
-- [ ] Test behavior with synthetic financial profiles.
-- [ ] Explain the score and its limitations to the user.
+- [x] Define the score on a 0–100 scale (\`src/analytics/financial_discipline_score.py\`).
+- [ ] Define measurable factors: spending regularity, impulsivity indicators, saving behavior, spending stability, and potential waste. *(Done: savings, budgets, stability. Missing: impulsivity, waste.)*
+- [x] Establish how each factor contributes to the score (40 savings / 35 budgets / 25 stability).
+- [x] Test behavior with synthetic financial profiles (\`tests/unit/test_financial_discipline_score.py\`).
+- [x] Explain the score and its limitations to the user (dashboard card, \`app/render_fds.py\`).
+- [ ] Decide how to treat BLIK/phone transfers to other people (currently excluded with all "Transfers").
 
 **Acceptance criteria:** The score is reproducible, interpretable, and not presented as an objective measure of a person's character.
 
