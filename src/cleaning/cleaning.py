@@ -3,10 +3,13 @@ from rapidfuzz import fuzz # To detect fuzzy words
 from src.cleaning.clean_transactions import clean_transactions
 from src.cleaning.data_conversion import data_conversion
 
+def remove_exact_duplicates(df):
+    return df.drop_duplicates()
+
 # --- DATA CLEANING ---
 def data_cleaning(df):
     # Drop duplicates from the table.
-    df.drop_duplicates()
+    df = remove_exact_duplicates(df)
     ''' --- Data conversion ---
     - Convert column names to LowerCase, remove Whitespaces and convert to SnakeCase
     - Remove polish symbols from column names with unidecode 
@@ -19,4 +22,5 @@ def data_cleaning(df):
     # For empty fields we will put name of receiver/sender
     df.loc[df["transaction_description"] == "", "transaction_description"] = df["counterparty_name"]
     return df
+
 

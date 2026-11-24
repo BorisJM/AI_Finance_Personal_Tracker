@@ -1,9 +1,9 @@
-import json
 import re
 
+from src.utils.paths import load_dictionary
+
 # Load STOPWORDS Data
-with open("./data/dictionaries/stopwords.json", "r") as f:
-    STOPWORDS = json.load(f)
+STOPWORDS = load_dictionary("stopwords.json")
 
 def clean_transactions(text):
     pattern = r"\b(?:{})\b".format("|".join(STOPWORDS))

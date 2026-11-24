@@ -11,6 +11,7 @@ from app.render_atv import render_atv
 from app.render_category_chart import render_category_chart
 from app.render_kpis import render_kpis
 from app.render_budgets import render_budgets
+from app.render_fds import render_fds
 from app.render_monthly_chart import render_monthly_chart
 from app.render_tables import render_tables
 from sqlalchemy.orm import Session
@@ -38,9 +39,20 @@ def load_data():
     with Session(engine) as session:
         df = get_transactions_dataframe(session)
 
+    if df.empty:
+        return df
     return prepare_analytics_data(df)
 
 df = load_data()
+
+# Nothing imported yet - show a hint instead of crashing on empty data
+if df.empty:
+    st.info(
+        "No transactions in the database yet. "
+        "Import a bank CSV first (e.g. run `python -m database.session`)."
+    )
+    st.stop()
+
 # Filtering functionality
 filtered_df = df.copy()
 
@@ -87,6 +99,11 @@ if len(st.session_state.date_range) == 2:
     filtered_df = filtered_df[(filtered_df["transaction_date"] >= start_date) & (filtered_df["transaction_date"] <= end_date)]
 # KPI CARDS
 render_kpis(filtered_df)
+
+st.divider()
+
+with Session(engine) as session:
+    render_fds(session)
 
 st.divider()
 

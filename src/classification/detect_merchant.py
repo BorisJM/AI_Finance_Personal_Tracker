@@ -1,7 +1,6 @@
-import json
+from src.utils.paths import load_dictionary
 
-with open("./data/dictionaries/merchants.json", "r", encoding="utf-8") as f:
-    merchants = json.load(f)
+merchants = load_dictionary("merchants.json")
 
 def normalize_merchant_name(text):
     # Normalize text

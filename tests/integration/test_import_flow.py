@@ -15,22 +15,20 @@ from src.analytics.spending_analysis import calculate_total_expenses, calculate_
 from src.analytics.income_analysis import calculate_total_income, calculate_monthly_income
 from src.insights.ai_insights import generate_ai_insights
 
+# Synthetic Millennium export (fake accounts, 24 rows, the last row is an exact duplicate).
+# Real bank exports stay in data/raw/ and are never used by tests.
+SAMPLE_CSV = Path(__file__).resolve().parents[1] / "fixtures" / "millennium_sample.csv"
+EXPECTED_TRANSACTIONS = 23
+
 
 def test_import_flow():
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
 
-    csv_path = (
-        Path(__file__).resolve().parents[2]
-        / "data"
-        / "raw"
-        / "transactions.csv"
-    )
-
     with Session(engine) as session:
         service = ImportService(session)
 
-        service.import_transactions(csv_path)
+        service.import_transactions(SAMPLE_CSV)
 
         transactions = session.scalars(
             select(Transaction)
@@ -40,7 +38,7 @@ def test_import_flow():
             select(Import)
         ).all()
 
-        assert len(transactions) == 239
+        assert len(transactions) == EXPECTED_TRANSACTIONS
         assert len(imports) == 1
 
         assert all(
@@ -60,25 +58,39 @@ def test_import_flow():
 
     engine.dispose()
 
+
+def test_reimporting_same_file_does_not_duplicate_transactions():
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+
+    with Session(engine) as session:
+        service = ImportService(session)
+
+        service.import_transactions(SAMPLE_CSV)
+        service.import_transactions(SAMPLE_CSV)
+
+        transactions = session.scalars(select(Transaction)).all()
+        imports = session.scalars(select(Import)).all()
+
+        assert len(transactions) == EXPECTED_TRANSACTIONS
+        # Every import attempt is recorded, even when it adds nothing new
+        assert len(imports) == 2
+
+    engine.dispose()
+
+
 def test_import_to_analytics_flow():
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
 
-    csv_path = (
-        Path(__file__).resolve().parents[2]
-        / "data"
-        / "raw"
-        / "transactions.csv"
-    )
-
     with Session(engine) as session:
         service = ImportService(session)
-        service.import_transactions(csv_path)
+        service.import_transactions(SAMPLE_CSV)
 
         df = get_transactions_dataframe(session)
         df = prepare_analytics_data(df)
 
-        assert len(df) == 239
+        assert len(df) == EXPECTED_TRANSACTIONS
 
         total_expenses = calculate_total_expenses(df)
         total_income = calculate_total_income(df)
@@ -94,20 +106,14 @@ def test_import_to_analytics_flow():
 
     engine.dispose()
 
+
 def test_import_to_ai_insights_flow():
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
 
-    csv_path = (
-        Path(__file__).resolve().parents[2]
-        / "data"
-        / "raw"
-        / "transactions.csv"
-    )
-
     with Session(engine) as session:
         service = ImportService(session)
-        service.import_transactions(csv_path)
+        service.import_transactions(SAMPLE_CSV)
 
         df = get_transactions_dataframe(session)
         df = prepare_analytics_data(df)
@@ -117,12 +123,9 @@ def test_import_to_ai_insights_flow():
         assert isinstance(insights, list)
         assert len(insights) > 0
 
-        for insight_group in insights:
-            assert isinstance(insight_group, list)
-
-            for insight in insight_group:
-                assert "type" in insight
-                assert "title" in insight
-                assert "message" in insight
-
+        for insight in insights:
+            assert isinstance(insight, dict)
+            assert "type" in insight
+            assert "title" in insight
+            assert "message" in insight
     engine.dispose()

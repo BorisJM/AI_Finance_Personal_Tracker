@@ -46,7 +46,7 @@ class CategoryType(Enum):
     PET = "Pet"
     BILLS_UTILITIES = "Bills & Utilities"
     GIFTS = "Gifts"
-
+    OTHER = "Other"
     # Category icons
     @property
     def icon(self) -> str:
@@ -72,6 +72,7 @@ class CategoryType(Enum):
             CategoryType.PET: "🐾",
             CategoryType.BILLS_UTILITIES: "🧾",
             CategoryType.GIFTS: "🎁",
+            CategoryType.OTHER: "📦",
         }
         return CATEGORY_ICONS[self]
     # Category colors
@@ -99,5 +100,6 @@ class CategoryType(Enum):
             CategoryType.PET: "#8BC34A",
             CategoryType.BILLS_UTILITIES: "#546E7A",
             CategoryType.GIFTS: "#EC407A",
+            CategoryType.OTHER: "#9E9E9E",
         }
         return CATEGORY_COLORS[self]
